@@ -1,6 +1,7 @@
 import { Link } from "react-router";
 import { Download, Moon, Sun } from "lucide-react";
 import { useTheme } from "./ThemeProvider";
+import LanguageSwitcher from "./LanguageSwitcher";
 
 export default function Header() {
   const { theme, setTheme } = useTheme();
@@ -16,12 +17,8 @@ export default function Header() {
             Save<span className="text-blue-600 dark:text-blue-500">Pro</span>
           </span>
         </Link>
-        <div className="flex items-center gap-6">
-          <nav className="hidden md:flex items-center gap-6 text-sm font-medium text-slate-600 dark:text-slate-300">
-            <a href="/#features" className="hover:text-blue-600 dark:hover:text-blue-400 transition-colors">الميزات</a>
-            <a href="/#how-to-use" className="hover:text-blue-600 dark:hover:text-blue-400 transition-colors">كيفية الاستخدام</a>
-            <a href="/#faq" className="hover:text-blue-600 dark:hover:text-blue-400 transition-colors">الأسئلة الشائعة</a>
-          </nav>
+        <div className="flex items-center gap-4">
+          <LanguageSwitcher />
           
           <button
             onClick={() => setTheme(theme === "dark" ? "light" : "dark")}

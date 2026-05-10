@@ -43,17 +43,9 @@ export default defineConfig({
   },
   server: {
     proxy: {
-      '/api/tikwm': {
-        target: 'https://tikwm.com',
+      '/api': {
+        target: 'http://localhost:3001',
         changeOrigin: true,
-        rewrite: (path) => path.replace(/^\/api\/tikwm/, '/api'),
-        secure: true,
-      },
-      '/video-proxy': {
-        target: 'https://v19.tiktokcdn-us.com',
-        changeOrigin: true,
-        rewrite: (path) => path.replace(/^\/video-proxy/, ''),
-        secure: true,
       },
     },
   },

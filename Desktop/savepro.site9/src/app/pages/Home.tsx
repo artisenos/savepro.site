@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import { Download, Link as LinkIcon, Zap, Video, CheckCircle2, ChevronDown, Music, Clock, Trash2, X, Loader2 } from "lucide-react";
 import { toast } from "sonner";
 import DownloadForm from "../components/DownloadForm";
+import { useLanguage } from "../contexts/LanguageContext";
 
 // Force any http:// URL to https://
 const forceHttps = (url: string | undefined): string | undefined => {
@@ -14,6 +15,7 @@ const API_BRIDGE = '/api-bridge.php';
 type DownloadState = 'idle' | 'processing' | 'downloading';
 
 export default function Home() {
+  const { t } = useLanguage();
   const [history, setHistory] = useState<any[]>([]);
   const [showHistory, setShowHistory] = useState(true);
 
@@ -85,17 +87,17 @@ export default function Home() {
   };
 
   return (
-    <div className="flex flex-col w-full">
+    <div dir="ltr" className="flex flex-col w-full">
       {/* Hero Section */}
       <section className="relative overflow-hidden bg-slate-50 dark:bg-slate-950 py-16 md:py-24 border-b border-slate-200 dark:border-slate-800 transition-colors">
         <div className="absolute inset-0 z-0 opacity-40 bg-[radial-gradient(ellipse_at_top,_var(--tw-gradient-stops))] from-blue-100 via-slate-50 to-slate-50 dark:from-blue-900/20 dark:via-slate-950 dark:to-slate-950"></div>
         <div className="container mx-auto px-4 relative z-10 flex flex-col items-center text-center">
 
           <h1 className="text-4xl md:text-5xl lg:text-6xl font-black text-slate-900 dark:text-white mb-6 leading-tight max-w-4xl tracking-tight">
-            تنزيل فيديو تيك توك <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-600 to-purple-600 dark:from-blue-400 dark:to-purple-500">بدون علامة مائية</span>
+            {t('heroTitlePart1')} <span className="text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 to-purple-600 dark:from-cyan-400 dark:to-purple-500">{t('heroTitlePart2')}</span>
           </h1>
           <p className="text-lg md:text-xl text-slate-600 dark:text-slate-300 mb-10 max-w-2xl font-medium">
-            أفضل طريقة لتنزيل مقاطع فيديو TikTok مجاناً وبجودة عالية. لا حاجة لتثبيت أي برامج، فقط انسخ الرابط وحمل!
+            {t('heroDesc')}
           </p>
 
           {/* Integrate the new DownloadForm */}
@@ -104,7 +106,7 @@ export default function Home() {
 
 
           <p className="mt-4 text-sm text-slate-500 dark:text-slate-400 z-20 relative">
-            من خلال استخدام خدمتنا، فإنك توافق على شروط الاستخدام.
+            {t('termsAgreement')}
           </p>
 
         </div>

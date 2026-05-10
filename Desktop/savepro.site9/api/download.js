@@ -15,34 +15,18 @@ export default async function handler(req, res) {
     return res.status(400).json({ success: false, message: 'الرابط غير صحيح، يرجى إدخال رابط تيك توك.' });
   }
 
-  const rapidApiKey = process.env.RAPIDAPI_KEY || process.env.VITE_RAPIDAPI_KEY;
-  const rapidApiHost = 'tiktok-video-no-watermark2.p.rapidapi.com';
-
-  if (!rapidApiKey) {
-    console.error('Missing RAPIDAPI_KEY environment variable.');
-    return res.status(500).json({ success: false, message: 'Server configuration error.' });
-  }
-
   try {
-    const apiUrl = `https://${rapidApiHost}/?url=${encodeURIComponent(url)}&hd=1`;
+    const apiUrl = `https://www.tikwm.com/api/?url=${encodeURIComponent(url)}&hd=1`;
 
     const response = await fetch(apiUrl, {
       method: 'GET',
       headers: {
-        'x-rapidapi-host': rapidApiHost,
-        'x-rapidapi-key': rapidApiKey
+        'Accept': 'application/json',
+        'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36'
       }
     });
 
     const data = await response.json();
-
-    // Check for rate limit or unauthorized errors from RapidAPI
-    if (response.status === 403 || response.status === 429) {
-      return res.status(403).json({ 
-        success: false, 
-        message: 'عذراً، انتهت حصة التحميل اليومية أو أن مفتاح API غير صالح.' 
-      });
-    }
 
     if (!response.ok) {
       return res.status(502).json({ 

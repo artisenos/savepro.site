@@ -1,6 +1,12 @@
 import { Link } from "react-router";
+import { useLanguage } from "../contexts/LanguageContext";
 
 export default function Footer() {
+  const { t } = useLanguage();
+
+  const handleScrollToTop = () => {
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  };
   return (
     <footer className="bg-white dark:bg-slate-900 border-t border-slate-200 dark:border-slate-800 mt-auto py-12 transition-colors">
       <div className="container mx-auto px-4">
@@ -14,14 +20,13 @@ export default function Footer() {
             </p>
           </div>
           <div className="flex items-center gap-6 text-sm text-slate-600 dark:text-slate-300">
-            <Link to="/privacy-policy" className="hover:text-blue-600 dark:hover:text-blue-400 transition-colors">سياسة الخصوصية</Link>
-            <Link to="/terms-of-service" className="hover:text-blue-600 dark:hover:text-blue-400 transition-colors">شروط الاستخدام</Link>
-            <a href="mailto:contact@savepro.app" className="hover:text-blue-600 dark:hover:text-blue-400 transition-colors">اتصل بنا</a>
+            <Link to="/privacy-policy" onClick={handleScrollToTop} className="hover:text-blue-600 dark:hover:text-blue-400 transition-colors">{t('privacyPolicy')}</Link>
+            <Link to="/terms-of-service" onClick={handleScrollToTop} className="hover:text-blue-600 dark:hover:text-blue-400 transition-colors">{t('termsOfService')}</Link>
+            <a href="mailto:contact@savepro.app" className="hover:text-blue-600 dark:hover:text-blue-400 transition-colors">Contact</a>
           </div>
         </div>
         <div className="mt-8 text-center text-sm text-slate-400 dark:text-slate-500">
-          © {new Date().getFullYear()} SavePro. جميع الحقوق محفوظة. <br />
-          نحن لسنا تابعين لـ TikTok أو ByteDance.
+          © {new Date().getFullYear()} SavePro. {t('allRightsReserved')}. <br />
         </div>
       </div>
     </footer>
