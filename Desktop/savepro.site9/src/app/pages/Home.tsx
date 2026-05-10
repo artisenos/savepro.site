@@ -3,6 +3,7 @@ import { Download, Link as LinkIcon, Zap, Video, CheckCircle2, ChevronDown, Musi
 import { toast } from "sonner";
 import DownloadForm from "../components/DownloadForm";
 import { useLanguage } from "../contexts/LanguageContext";
+import SEO from "../components/SEO";
 
 // Force any http:// URL to https://
 const forceHttps = (url: string | undefined): string | undefined => {
@@ -34,7 +35,7 @@ export default function Home() {
     setHistory([]);
     setShowHistory(false);
     localStorage.removeItem('savepro_history');
-    toast.success('تم مسح السجل');
+    toast.success(t('historyCleared'));
   };
 
   const removeFromHistory = (videoUrl: string) => {
@@ -48,26 +49,26 @@ export default function Home() {
 
   const handleDirectDownload = async (fileUrl: string | undefined, type: 'video' | 'music') => {
     if (!fileUrl) {
-      toast.error(`رابط ${type === 'video' ? 'الفيديو' : 'الموسيقى'} غير متوفر`);
+      toast.error(t(type === 'video' ? 'videoNotAvailable' : 'musicNotAvailable'));
       return;
     }
 
     const ext = type === 'video' ? 'mp4' : 'mp3';
     const filename = `savepro-${type}-${Date.now()}.${ext}`;
 
-    const toastId = toast.loading(`جاري تحميل ${type === 'video' ? 'الفيديو' : 'الموسيقى'}...`);
+    const toastId = toast.loading(t(type === 'video' ? 'downloadingVideo' : 'downloadingMusic'));
 
     try {
       const proxyUrl = `${API_BRIDGE}?action=download&url=${encodeURIComponent(fileUrl)}&type=${type}`;
       const response = await fetch(proxyUrl);
 
       if (!response.ok) {
-        throw new Error(`فشل التحميل (HTTP ${response.status})`);
+        throw new Error(t('downloadFailed').replace('{status}', response.status.toString()));
       }
 
       const blob = await response.blob();
       if (blob.size < 1000) {
-        throw new Error('الملف المحمّل صغير جداً — قد يكون الرابط منتهي الصلاحية');
+        throw new Error(t('fileTooSmall'));
       }
 
       const objectUrl = URL.createObjectURL(blob);
@@ -79,15 +80,18 @@ export default function Home() {
       document.body.removeChild(link);
       URL.revokeObjectURL(objectUrl);
 
-      toast.success('تم التحميل بنجاح!', { id: toastId });
+      toast.success(t('downloadSuccess'), { id: toastId });
     } catch (error: any) {
       console.error('Download error:', error);
-      toast.error(error.message || 'فشل التحميل، حاول مجدداً', { id: toastId });
+      toast.error(error.message || t('downloadFailedGeneric'), { id: toastId });
     }
   };
 
   return (
     <div dir="ltr" className="flex flex-col w-full">
+      <SEO 
+        description="Download TikTok videos without watermark for free. Fast, easy, and secure TikTok video downloader."
+      />
       {/* Hero Section */}
       <section className="relative overflow-hidden bg-slate-50 dark:bg-slate-950 py-16 md:py-24 border-b border-slate-200 dark:border-slate-800 transition-colors">
         <div className="absolute inset-0 z-0 opacity-40 bg-[radial-gradient(ellipse_at_top,_var(--tw-gradient-stops))] from-blue-100 via-slate-50 to-slate-50 dark:from-blue-900/20 dark:via-slate-950 dark:to-slate-950"></div>
@@ -119,14 +123,14 @@ export default function Home() {
             <div className="flex items-center justify-between mb-6">
               <h2 className="text-2xl font-bold text-slate-900 dark:text-white flex items-center gap-2">
                 <Clock className="w-6 h-6 text-blue-600 dark:text-blue-400" />
-                سجل التحميلات
+                {t('historyTitle')}
               </h2>
               <button
                 onClick={clearHistory}
                 className="flex items-center gap-1 text-sm text-red-500 hover:text-red-600 dark:text-red-400 dark:hover:text-red-300 transition-colors"
               >
                 <Trash2 className="w-4 h-4" />
-                مسح الكل
+                {t('clearHistory')}
               </button>
             </div>
             <div className="grid sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
@@ -137,7 +141,7 @@ export default function Home() {
                     <button
                       onClick={() => removeFromHistory(item.videoUrl)}
                       className="absolute top-2 left-2 p-1 rounded-full bg-black/50 text-white opacity-0 group-hover:opacity-100 transition-opacity hover:bg-black/70"
-                      aria-label="حذف من السجل"
+                      aria-label={t('removeFromHistoryAria')}
                     >
                       <X className="w-4 h-4" />
                     </button>
@@ -150,7 +154,7 @@ export default function Home() {
                       className="mt-2 w-full flex items-center justify-center gap-1 text-sm py-2 rounded-lg bg-blue-600 text-white hover:bg-blue-700 transition-colors font-medium"
                     >
                       <Download className="w-3.5 h-3.5" />
-                      إعادة التحميل
+                      {t('reDownload')}
                     </button>
                   </div>
                 </div>
@@ -165,10 +169,10 @@ export default function Home() {
         <div className="container mx-auto px-4">
           <div className="text-center mb-12">
             <h2 className="text-3xl md:text-4xl font-bold text-slate-900 dark:text-white mb-4">
-              لماذا تختار SavePro لتحميل فيديوهات تيك توك؟
+              {t('featuresTitle')}
             </h2>
             <p className="text-lg text-slate-600 dark:text-slate-300 max-w-2xl mx-auto">
-              أفضل أداة تحميل تيك توك مجانية مع مميزات متقدمة لتحميل فيديوهات تيك توك بسهولة
+              {t('featuresDesc')}
             </p>
           </div>
           <div className="grid md:grid-cols-3 gap-8 max-w-6xl mx-auto">
@@ -176,22 +180,22 @@ export default function Home() {
               <div className="w-12 h-12 bg-blue-100 dark:bg-blue-900 rounded-full flex items-center justify-center mx-auto mb-4">
                 <Zap className="w-6 h-6 text-blue-600 dark:text-blue-400" />
               </div>
-              <h3 className="text-xl font-semibold text-slate-900 dark:text-white mb-2">تحميل سريع</h3>
-              <p className="text-slate-600 dark:text-slate-300">تحميل فيديوهات تيك توك بسرعة فائقة بدون انتظار طويل</p>
+              <h3 className="text-xl font-semibold text-slate-900 dark:text-white mb-2">{t('featureFastTitle')}</h3>
+              <p className="text-slate-600 dark:text-slate-300">{t('featureFastDesc')}</p>
             </div>
             <div className="bg-white dark:bg-slate-800 rounded-xl p-6 shadow-sm border border-slate-100 dark:border-slate-700 text-center">
               <div className="w-12 h-12 bg-green-100 dark:bg-green-900 rounded-full flex items-center justify-center mx-auto mb-4">
                 <CheckCircle2 className="w-6 h-6 text-green-600 dark:text-green-400" />
               </div>
-              <h3 className="text-xl font-semibold text-slate-900 dark:text-white mb-2">بدون علامة مائية</h3>
-              <p className="text-slate-600 dark:text-slate-300">احصل على فيديوهات تيك توك نظيفة بدون أي علامات مائية</p>
+              <h3 className="text-xl font-semibold text-slate-900 dark:text-white mb-2">{t('featureNoWatermarkTitle')}</h3>
+              <p className="text-slate-600 dark:text-slate-300">{t('featureNoWatermarkDesc')}</p>
             </div>
             <div className="bg-white dark:bg-slate-800 rounded-xl p-6 shadow-sm border border-slate-100 dark:border-slate-700 text-center">
               <div className="w-12 h-12 bg-purple-100 dark:bg-purple-900 rounded-full flex items-center justify-center mx-auto mb-4">
                 <Music className="w-6 h-6 text-purple-600 dark:text-purple-400" />
               </div>
-              <h3 className="text-xl font-semibold text-slate-900 dark:text-white mb-2">تحميل الموسيقى</h3>
-              <p className="text-slate-600 dark:text-slate-300">قم بتحميل موسيقى تيك توك بتنسيق MP3 بجودة عالية</p>
+              <h3 className="text-xl font-semibold text-slate-900 dark:text-white mb-2">{t('featureMusicTitle')}</h3>
+              <p className="text-slate-600 dark:text-slate-300">{t('featureMusicDesc')}</p>
             </div>
           </div>
         </div>
@@ -201,24 +205,24 @@ export default function Home() {
       <section id="how-to-use" className="py-16 md:py-24 bg-white dark:bg-slate-900 border-b border-slate-200 dark:border-slate-800 transition-colors scroll-mt-20">
         <div className="container mx-auto px-4">
           <div className="text-center mb-12">
-            <h2 className="text-3xl md:text-4xl font-bold text-slate-900 dark:text-white mb-4">كيفية تحميل فيديوهات تيك توك</h2>
-            <p className="text-lg text-slate-600 dark:text-slate-300 max-w-2xl mx-auto">خطوات بسيطة لتحميل أي فيديو من تيك توك باستخدام موقعنا</p>
+            <h2 className="text-3xl md:text-4xl font-bold text-slate-900 dark:text-white mb-4">{t('howItWorksTitle')}</h2>
+            <p className="text-lg text-slate-600 dark:text-slate-300 max-w-2xl mx-auto">{t('howItWorksDesc')}</p>
           </div>
           <div className="grid md:grid-cols-3 gap-8 max-w-4xl mx-auto">
             <div className="text-center">
               <div className="w-16 h-16 bg-blue-600 rounded-full flex items-center justify-center mx-auto mb-4 text-white font-bold text-xl">1</div>
-              <h3 className="text-xl font-semibold text-slate-900 dark:text-white mb-2">انسخ الرابط</h3>
-              <p className="text-slate-600 dark:text-slate-300">انسخ رابط الفيديو من تطبيق تيك توك أو الموقع</p>
+              <h3 className="text-xl font-semibold text-slate-900 dark:text-white mb-2">{t('step1Title')}</h3>
+              <p className="text-slate-600 dark:text-slate-300">{t('step1Desc')}</p>
             </div>
             <div className="text-center">
               <div className="w-16 h-16 bg-blue-600 rounded-full flex items-center justify-center mx-auto mb-4 text-white font-bold text-xl">2</div>
-              <h3 className="text-xl font-semibold text-slate-900 dark:text-white mb-2">ألصق الرابط</h3>
-              <p className="text-slate-600 dark:text-slate-300">الصق الرابط في مربع البحث في موقع SavePro</p>
+              <h3 className="text-xl font-semibold text-slate-900 dark:text-white mb-2">{t('step2Title')}</h3>
+              <p className="text-slate-600 dark:text-slate-300">{t('step2Desc')}</p>
             </div>
             <div className="text-center">
               <div className="w-16 h-16 bg-blue-600 rounded-full flex items-center justify-center mx-auto mb-4 text-white font-bold text-xl">3</div>
-              <h3 className="text-xl font-semibold text-slate-900 dark:text-white mb-2">تحميل الفيديو</h3>
-              <p className="text-slate-600 dark:text-slate-300">اضغط على زر التحميل واحصل على الفيديو فوراً</p>
+              <h3 className="text-xl font-semibold text-slate-900 dark:text-white mb-2">{t('step3Title')}</h3>
+              <p className="text-slate-600 dark:text-slate-300">{t('step3Desc')}</p>
             </div>
           </div>
         </div>
@@ -228,15 +232,15 @@ export default function Home() {
       <section id="faq" className="py-16 md:py-24 bg-slate-50 dark:bg-slate-900 transition-colors scroll-mt-20">
         <div className="container mx-auto px-4">
           <div className="text-center mb-12">
-            <h2 className="text-3xl md:text-4xl font-bold text-slate-900 dark:text-white mb-4">الأسئلة الشائعة</h2>
-            <p className="text-lg text-slate-600 dark:text-slate-300 max-w-2xl mx-auto">إجابات على أكثر الأسئلة شيوعاً حول استخدام SavePro</p>
+            <h2 className="text-3xl md:text-4xl font-bold text-slate-900 dark:text-white mb-4">{t('faqTitle')}</h2>
+            <p className="text-lg text-slate-600 dark:text-slate-300 max-w-2xl mx-auto">{t('faqDesc')}</p>
           </div>
           <div className="max-w-3xl mx-auto flex flex-col gap-4">
-            <FaqItem question="هل أداة SavePro مجانية؟" answer="نعم، موقع SavePro مجاني بالكامل ولن يطلب منك أي رسوم لتنزيل الفيديوهات." />
-            <FaqItem question="هل يمكنني تنزيل مقاطع فيديو TikTok على أجهزة iPhone / iPad؟" answer="نعم بالتأكيد. إذا كنت تستخدم نظام iOS، نوصي باستخدام متصفح Safari لإجراء التنزيل بسهولة." />
-            <FaqItem question="هل أقوم بتنزيل الفيديوهات بدون علامة مائية فعلاً؟" answer="نعم، الميزة الأساسية لموقعنا هي إزالة العلامة المائية وشعار تيك توك من الفيديو ليظهر بشكل نقي." />
-            <FaqItem question="هل أحتاج لتثبيت أي برنامج أو تطبيق؟" answer="لا، SavePro يعمل مباشرة من المتصفح. لا تحتاج لتثبيت أي شيء على جهازك." />
-            <FaqItem question="ما هي جودة الفيديو الذي أقوم بتحميله؟" answer="يتم تحميل الفيديوهات بأعلى جودة متاحة من خوادم TikTok، عادة بدقة HD أو Full HD." />
+            <FaqItem question={t('faq1Q')} answer={t('faq1A')} />
+            <FaqItem question={t('faq2Q')} answer={t('faq2A')} />
+            <FaqItem question={t('faq3Q')} answer={t('faq3A')} />
+            <FaqItem question={t('faq4Q')} answer={t('faq4A')} />
+            <FaqItem question={t('faq5Q')} answer={t('faq5A')} />
           </div>
         </div>
       </section>

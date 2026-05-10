@@ -7,13 +7,15 @@ import { Toaster } from "./components/ui/sonner";
 const Home = lazy(() => import("./pages/Home"));
 const PrivacyPolicy = lazy(() => import("./pages/PrivacyPolicy"));
 const TermsOfService = lazy(() => import("./pages/TermsOfService"));
+const DMCA = lazy(() => import("./pages/DMCA"));
+const Contact = lazy(() => import("./pages/Contact"));
 
 function Root() {
   return (
     <div dir="ltr" className="min-h-screen flex flex-col bg-slate-50 dark:bg-slate-950 text-slate-900 dark:text-slate-50" style={{ fontFamily: 'Tajawal, sans-serif' }}>
       <Header />
       <main className="flex-1 flex flex-col">
-        <Suspense fallback={<div className="flex justify-center items-center h-64">جاري التحميل...</div>}>
+        <Suspense fallback={<div className="flex justify-center items-center h-64">Loading...</div>}>
           <Outlet />
         </Suspense>
       </main>
@@ -31,6 +33,8 @@ export const router = createBrowserRouter([
       { index: true, Component: Home },
       { path: "privacy-policy", Component: PrivacyPolicy },
       { path: "terms-of-service", Component: TermsOfService },
+      { path: "dmca", Component: DMCA },
+      { path: "contact", Component: Contact },
     ],
   },
 ]);
