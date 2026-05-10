@@ -10,7 +10,7 @@ const TermsOfService = lazy(() => import("./pages/TermsOfService"));
 
 function Root() {
   return (
-    <div dir="rtl" className="min-h-screen flex flex-col bg-slate-50 dark:bg-slate-950 text-slate-900 dark:text-slate-50" style={{ fontFamily: 'Tajawal, sans-serif' }}>
+    <div dir="ltr" className="min-h-screen flex flex-col bg-slate-50 dark:bg-slate-950 text-slate-900 dark:text-slate-50" style={{ fontFamily: 'Tajawal, sans-serif' }}>
       <Header />
       <main className="flex-1 flex flex-col">
         <Suspense fallback={<div className="flex justify-center items-center h-64">جاري التحميل...</div>}>
