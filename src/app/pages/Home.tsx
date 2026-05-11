@@ -114,7 +114,7 @@ export default function Home() {
         description={t('seoDescription')}
       />
       {/* Hero Section */}
-      <section className="relative overflow-hidden py-20 md:py-32 transition-colors">
+      <section className="relative overflow-hidden py-20 md:py-32">
         <div className="absolute top-[-10%] left-[-10%] w-[50%] h-[50%] bg-cyan-500/10 dark:bg-cyan-500/20 rounded-full blur-[120px] -z-10"></div>
         <div className="absolute bottom-0 right-[-5%] w-[40%] h-[40%] bg-purple-500/10 dark:bg-purple-500/20 rounded-full blur-[100px] -z-10"></div>
         <div className="absolute inset-0 z-0 opacity-40 bg-[radial-gradient(ellipse_at_top,_var(--tw-gradient-stops))] from-blue-100 via-transparent to-transparent dark:from-blue-900/20 dark:via-transparent dark:to-transparent"></div>
@@ -143,7 +143,7 @@ export default function Home() {
 
       {/* Download History Section */}
       {showHistory && history.length > 0 && (
-        <section className="py-16 bg-white/50 dark:bg-slate-900/50 backdrop-blur-sm transition-colors">
+        <section className="py-16 bg-white/50 dark:bg-white/5 backdrop-blur-sm">
           <div className="container mx-auto px-4">
             <div className="flex items-center justify-between mb-6">
               <h2 className="text-2xl font-bold text-slate-900 dark:text-white flex items-center gap-2">
@@ -160,8 +160,8 @@ export default function Home() {
             </div>
             <div className="grid sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
               {history.map((item, idx) => (
-                <div key={item.videoUrl + idx} className="bg-slate-50 dark:bg-slate-800 rounded-xl border border-slate-200 dark:border-slate-700 overflow-hidden group transition-all hover:shadow-md">
-                  <div className="relative aspect-video bg-slate-200 dark:bg-slate-700">
+                <div key={item.videoUrl + idx} className="bg-slate-50 dark:bg-neutral-900 rounded-xl border border-slate-200 dark:border-white/5 overflow-hidden group transition-all hover:shadow-md">
+                  <div className="relative aspect-video bg-slate-200 dark:bg-neutral-800">
                     <img src={item.cover} alt={item.title} width="320" height="180" className="w-full h-full object-cover" loading="lazy" />
                     <button
                       onClick={() => removeFromHistory(item.videoUrl)}
@@ -190,7 +190,7 @@ export default function Home() {
       )}
 
       {/* Features Section */}
-      <section id="features" className="py-20 md:py-32 transition-colors scroll-mt-20">
+      <section id="features" className="py-20 md:py-32 scroll-mt-20">
         <div className="container mx-auto px-4">
           <div className="text-center mb-12">
             <h2 className="text-3xl md:text-4xl font-bold text-slate-900 dark:text-white mb-4">
@@ -201,42 +201,42 @@ export default function Home() {
             </p>
           </div>
           <div className="grid md:grid-cols-3 gap-8 max-w-6xl mx-auto">
-            <div className="bg-white dark:bg-slate-800 rounded-xl p-6 shadow-sm border border-slate-100 dark:border-slate-700 text-center hover:shadow-md transition-shadow">
+            <div className="bg-white dark:bg-neutral-900 rounded-xl p-6 shadow-sm border border-slate-100 dark:border-white/5 text-center hover:shadow-md transition-shadow">
               <div className="w-12 h-12 bg-blue-100 dark:bg-blue-900 rounded-full flex items-center justify-center mx-auto mb-4">
                 <Zap className="w-6 h-6 text-blue-600 dark:text-blue-400" />
               </div>
               <h3 className="text-xl font-semibold text-slate-900 dark:text-white mb-2">{t('featureFastTitle')}</h3>
               <p className="text-slate-600 dark:text-slate-300">{t('featureFastDesc')}</p>
             </div>
-            <div className="bg-white dark:bg-slate-800 rounded-xl p-6 shadow-sm border border-slate-100 dark:border-slate-700 text-center hover:shadow-md transition-shadow">
+            <div className="bg-white dark:bg-neutral-900 rounded-xl p-6 shadow-sm border border-slate-100 dark:border-white/5 text-center hover:shadow-md transition-shadow">
               <div className="w-12 h-12 bg-green-100 dark:bg-green-900 rounded-full flex items-center justify-center mx-auto mb-4">
                 <CheckCircle2 className="w-6 h-6 text-green-600 dark:text-green-400" />
               </div>
               <h3 className="text-xl font-semibold text-slate-900 dark:text-white mb-2">{t('featureNoWatermarkTitle')}</h3>
               <p className="text-slate-600 dark:text-slate-300">{t('featureNoWatermarkDesc')}</p>
             </div>
-            <div className="bg-white dark:bg-slate-800 rounded-xl p-6 shadow-sm border border-slate-100 dark:border-slate-700 text-center hover:shadow-md transition-shadow">
+            <div className="bg-white dark:bg-neutral-900 rounded-xl p-6 shadow-sm border border-slate-100 dark:border-white/5 text-center hover:shadow-md transition-shadow">
               <div className="w-12 h-12 bg-purple-100 dark:bg-purple-900 rounded-full flex items-center justify-center mx-auto mb-4">
                 <Music className="w-6 h-6 text-purple-600 dark:text-purple-400" />
               </div>
               <h3 className="text-xl font-semibold text-slate-900 dark:text-white mb-2">{t('featureMusicTitle')}</h3>
               <p className="text-slate-600 dark:text-slate-300">{t('featureMusicDesc')}</p>
             </div>
-            <div className="bg-white dark:bg-slate-800 rounded-xl p-6 shadow-sm border border-slate-100 dark:border-slate-700 text-center hover:shadow-md transition-shadow">
+            <div className="bg-white dark:bg-neutral-900 rounded-xl p-6 shadow-sm border border-slate-100 dark:border-white/5 text-center hover:shadow-md transition-shadow">
               <div className="w-12 h-12 bg-cyan-100 dark:bg-cyan-900 rounded-full flex items-center justify-center mx-auto mb-4">
                 <ShieldCheck className="w-6 h-6 text-cyan-600 dark:text-cyan-400" />
               </div>
               <h3 className="text-xl font-semibold text-slate-900 dark:text-white mb-2">{t('featureSecurityTitle')}</h3>
               <p className="text-slate-600 dark:text-slate-300">{t('featureSecurityDesc')}</p>
             </div>
-            <div className="bg-white dark:bg-slate-800 rounded-xl p-6 shadow-sm border border-slate-100 dark:border-slate-700 text-center hover:shadow-md transition-shadow">
+            <div className="bg-white dark:bg-neutral-900 rounded-xl p-6 shadow-sm border border-slate-100 dark:border-white/5 text-center hover:shadow-md transition-shadow">
               <div className="w-12 h-12 bg-orange-100 dark:bg-orange-900 rounded-full flex items-center justify-center mx-auto mb-4">
                 <MonitorSmartphone className="w-6 h-6 text-orange-600 dark:text-orange-400" />
               </div>
               <h3 className="text-xl font-semibold text-slate-900 dark:text-white mb-2">{t('featureCompatibilityTitle')}</h3>
               <p className="text-slate-600 dark:text-slate-300">{t('featureCompatibilityDesc')}</p>
             </div>
-            <div className="bg-white dark:bg-slate-800 rounded-xl p-6 shadow-sm border border-slate-100 dark:border-slate-700 text-center hover:shadow-md transition-shadow">
+            <div className="bg-white dark:bg-neutral-900 rounded-xl p-6 shadow-sm border border-slate-100 dark:border-white/5 text-center hover:shadow-md transition-shadow">
               <div className="w-12 h-12 bg-pink-100 dark:bg-pink-900 rounded-full flex items-center justify-center mx-auto mb-4">
                 <Infinity className="w-6 h-6 text-pink-600 dark:text-pink-400" />
               </div>
@@ -254,7 +254,7 @@ export default function Home() {
       </div>
 
       {/* How it works */}
-      <section id="how-to-use" className="py-20 md:py-32 transition-colors scroll-mt-20">
+      <section id="how-to-use" className="py-20 md:py-32 scroll-mt-20">
         <div className="container mx-auto px-4">
           <div className="text-center mb-12">
             <h2 className="text-3xl md:text-4xl font-bold text-slate-900 dark:text-white mb-4">{t('howItWorksTitle')}</h2>
@@ -281,9 +281,9 @@ export default function Home() {
       </section>
 
       {/* Detailed SEO Guide Section */}
-      <section className="py-20 md:py-32 transition-colors">
+      <section className="py-20 md:py-32">
         <div className="container mx-auto px-4 max-w-4xl">
-          <div className="bg-white dark:bg-slate-900 rounded-3xl p-8 md:p-12 shadow-sm border border-slate-200 dark:border-slate-800">
+          <div className="bg-white dark:bg-black rounded-3xl p-8 md:p-12 shadow-sm border border-slate-200 dark:border-white/5">
             <h2 className="text-3xl font-bold text-slate-900 dark:text-white mb-6">
               {t('guideTitle')}
             </h2>
@@ -327,7 +327,7 @@ export default function Home() {
       </section>
 
       {/* FAQ Section */}
-      <section id="faq" className="py-20 md:py-32 transition-colors scroll-mt-20">
+      <section id="faq" className="py-20 md:py-32 scroll-mt-20">
         <div className="container mx-auto px-4">
           <div className="text-center mb-12">
             <h2 className="text-3xl md:text-4xl font-bold text-slate-900 dark:text-white mb-4">{t('faqTitle')}</h2>
@@ -344,7 +344,7 @@ export default function Home() {
       </section>
 
       {/* Contact Section */}
-      <section id="contact" className="py-20 md:py-32 transition-colors scroll-mt-20 relative overflow-hidden">
+      <section id="contact" className="py-20 md:py-32 scroll-mt-20 relative overflow-hidden">
         {/* Subtle background glow for unification */}
         <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[800px] bg-blue-500/5 dark:bg-blue-500/10 rounded-full blur-[120px] -z-10"></div>
         <div className="container mx-auto px-4">
@@ -383,7 +383,7 @@ function ContactForm() {
   };
 
   return (
-    <div className="bg-slate-50 dark:bg-slate-900 rounded-3xl p-8 border border-slate-200 dark:border-slate-800 shadow-xl relative overflow-hidden">
+    <div className="bg-slate-50 dark:bg-black rounded-3xl p-8 border border-slate-200 dark:border-white/5 shadow-xl relative overflow-hidden">
       {status === "success" && (
         <div className="absolute inset-0 bg-white/90 dark:bg-slate-900/90 z-10 flex flex-col items-center justify-center text-center p-8">
           <CheckCircle2 className="w-16 h-16 text-green-500 mb-4" />
@@ -408,7 +408,7 @@ function ContactForm() {
               type="text"
               value={formData.name}
               onChange={(e) => setFormData({...formData, name: e.target.value})}
-              className="w-full px-4 py-3 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl focus:ring-2 focus:ring-blue-500 dark:text-white outline-none transition-all"
+              className="w-full px-4 py-3 bg-white dark:bg-neutral-900 border border-slate-200 dark:border-white/10 rounded-xl focus:ring-2 focus:ring-blue-500 dark:text-white outline-none transition-all"
             />
           </div>
           <div className="space-y-2 col-span-2 sm:col-span-1">
@@ -420,7 +420,7 @@ function ContactForm() {
               type="email"
               value={formData.email}
               onChange={(e) => setFormData({...formData, email: e.target.value})}
-              className="w-full px-4 py-3 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl focus:ring-2 focus:ring-blue-500 dark:text-white outline-none transition-all"
+              className="w-full px-4 py-3 bg-white dark:bg-neutral-900 border border-slate-200 dark:border-white/10 rounded-xl focus:ring-2 focus:ring-blue-500 dark:text-white outline-none transition-all"
             />
           </div>
         </div>
@@ -434,7 +434,7 @@ function ContactForm() {
             rows={4}
             value={formData.message}
             onChange={(e) => setFormData({...formData, message: e.target.value})}
-            className="w-full px-4 py-3 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl focus:ring-2 focus:ring-blue-500 dark:text-white outline-none transition-all resize-none"
+            className="w-full px-4 py-3 bg-white dark:bg-neutral-900 border border-slate-200 dark:border-white/10 rounded-xl focus:ring-2 focus:ring-blue-500 dark:text-white outline-none transition-all resize-none"
           />
         </div>
 
@@ -454,7 +454,7 @@ function FaqItem({ question, answer }: { question: string; answer: string }) {
   const [isOpen, setIsOpen] = useState(false);
 
   return (
-    <div className="bg-white dark:bg-slate-800 rounded-2xl border border-slate-200 dark:border-slate-700 overflow-hidden transition-colors">
+    <div className="bg-white dark:bg-neutral-900 rounded-2xl border border-slate-200 dark:border-white/5 overflow-hidden transition-colors">
       <button
         className="w-full px-6 py-4 flex items-center justify-between hover:bg-slate-50 dark:hover:bg-slate-700/50 transition-colors text-start"
         onClick={() => setIsOpen(!isOpen)}

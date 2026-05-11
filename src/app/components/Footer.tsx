@@ -9,7 +9,7 @@ export default function Footer() {
   };
 
   return (
-    <footer dir="ltr" className="relative z-10 bg-white/40 dark:bg-slate-950/40 backdrop-blur-xl border-t border-slate-200/50 dark:border-slate-800/50 mt-auto py-16 transition-all overflow-hidden">
+    <footer dir="ltr" className="relative z-10 bg-white/40 dark:bg-black/40 backdrop-blur-xl border-t border-slate-200/50 dark:border-white/10 mt-auto py-16 overflow-hidden">
       {/* Decorative background elements */}
       <div className="absolute top-0 left-1/4 w-64 h-64 bg-cyan-500/5 rounded-full blur-3xl -z-10"></div>
       <div className="absolute bottom-0 right-1/4 w-96 h-96 bg-purple-500/5 rounded-full blur-3xl -z-10"></div>
@@ -77,15 +77,15 @@ export default function Footer() {
               <li><a href="mailto:support@savepro.site" className="hover:text-cyan-500 transition-colors font-medium">support@savepro.site</a></li>
               <li className="pt-2">
                 <div className="flex gap-4">
-                  <a href="#" className="p-2 bg-slate-100 dark:bg-slate-800 rounded-lg hover:bg-cyan-500 hover:text-white transition-all"><Github className="w-5 h-5" /></a>
-                  <a href="#" className="p-2 bg-slate-100 dark:bg-slate-800 rounded-lg hover:bg-purple-500 hover:text-white transition-all"><ExternalLink className="w-5 h-5" /></a>
+                  <a href="#" className="p-2 bg-slate-100 dark:bg-neutral-800 rounded-lg hover:bg-cyan-500 hover:text-white transition-all"><Github className="w-5 h-5" /></a>
+                  <a href="#" className="p-2 bg-slate-100 dark:bg-neutral-800 rounded-lg hover:bg-purple-500 hover:text-white transition-all"><ExternalLink className="w-5 h-5" /></a>
                 </div>
               </li>
             </ul>
           </div>
         </div>
 
-        <div className="pt-8 border-t border-slate-200/50 dark:border-slate-800/50 flex flex-col md:flex-row justify-between items-center gap-4 text-sm text-slate-500 dark:text-slate-400">
+        <div className="pt-8 border-t border-slate-200/50 dark:border-white/10 flex flex-col md:flex-row justify-between items-center gap-4 text-sm text-slate-500 dark:text-slate-400">
           <p>© {new Date().getFullYear()} SavePro.site. {t('rightsReserved')}</p>
           <div className="flex items-center gap-6">
             <span className="flex items-center gap-1.5">

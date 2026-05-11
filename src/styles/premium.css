@@ -93,7 +93,7 @@
   background: linear-gradient(135deg, #6366f1 0%, #8b5cf6 50%, #ec4899 100%);
   background-size: 200% 200%;
   animation: gradient-shift 3s ease infinite;
-  transition: all 0.3s ease;
+  transition: all var(--transition-speed) var(--transition-timing);
   box-shadow: 0 4px 20px rgba(99, 102, 241, 0.4);
 }
 
@@ -111,7 +111,7 @@
   background: rgba(255, 255, 255, 0.05);
   border: 1px solid rgba(255, 255, 255, 0.12);
   color: white;
-  transition: all 0.3s ease;
+  transition: all var(--transition-speed) var(--transition-timing);
 }
 
 .input-premium:focus {
@@ -139,7 +139,7 @@
 .btn-download-video {
   background: linear-gradient(135deg, #6366f1, #8b5cf6);
   box-shadow: 0 4px 15px rgba(99, 102, 241, 0.5);
-  transition: all 0.25s ease;
+  transition: all var(--transition-speed) var(--transition-timing);
 }
 
 .btn-download-video:hover {
@@ -151,7 +151,7 @@
 .btn-download-music {
   background: rgba(255, 255, 255, 0.08);
   border: 1px solid rgba(255, 255, 255, 0.15);
-  transition: all 0.25s ease;
+  transition: all var(--transition-speed) var(--transition-timing);
 }
 
 .btn-download-music:hover {
@@ -202,7 +202,7 @@
 .feature-card-dark {
   background: rgba(255, 255, 255, 0.04);
   border: 1px solid rgba(255, 255, 255, 0.08);
-  transition: all 0.3s ease;
+  transition: all var(--transition-speed) var(--transition-timing);
 }
 
 .feature-card-dark:hover {
@@ -216,7 +216,7 @@
 .history-card {
   background: rgba(255, 255, 255, 0.04);
   border: 1px solid rgba(255, 255, 255, 0.08);
-  transition: all 0.25s ease;
+  transition: all var(--transition-speed) var(--transition-timing);
 }
 
 .history-card:hover {
@@ -234,7 +234,7 @@
 .faq-item-dark {
   background: rgba(255, 255, 255, 0.04);
   border: 1px solid rgba(255, 255, 255, 0.08);
-  transition: all 0.25s ease;
+  transition: all var(--transition-speed) var(--transition-timing);
 }
 
 .faq-item-dark:hover {

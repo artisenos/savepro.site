@@ -263,7 +263,7 @@ export default function DownloadForm() {
     <div dir="ltr" className="w-full max-w-3xl mx-auto flex flex-col items-center z-20 relative">
       <form
         onSubmit={handleSubmit} 
-        className="w-full bg-white/70 dark:bg-slate-900/70 backdrop-blur-xl p-2 rounded-2xl shadow-[0_8px_30px_rgb(0,0,0,0.12)] dark:shadow-[0_8px_30px_rgba(0,255,255,0.1)] border border-white/20 dark:border-cyan-500/20 flex flex-col md:flex-row gap-2 relative overflow-hidden"
+        className="w-full bg-white/70 dark:bg-black/70 backdrop-blur-xl p-2 rounded-2xl shadow-[0_8px_30px_rgb(0,0,0,0.12)] dark:shadow-[0_8px_30px_rgba(0,255,255,0.1)] border border-white/20 dark:border-cyan-500/20 flex flex-col md:flex-row gap-2 relative overflow-hidden"
       >
         <div className="relative flex-1">
           <div className="absolute inset-y-0 end-0 pe-3 flex items-center ps-4 pointer-events-none">
@@ -274,7 +274,7 @@ export default function DownloadForm() {
             value={url}
             onChange={(e) => setUrl(e.target.value)}
             placeholder={t('inputPlaceholder')}
-            className="block w-full rounded-xl border-0 py-4 pe-12 ps-4 bg-transparent text-slate-900 dark:text-white ring-1 ring-inset ring-slate-200/50 dark:ring-slate-700/50 placeholder:text-slate-400 focus:ring-2 focus:ring-inset focus:ring-cyan-500 text-lg outline-none transition-all shadow-inner bg-white/50 dark:bg-black/20 text-start"
+            className="block w-full rounded-xl border-0 py-4 pe-12 ps-4 bg-transparent text-slate-900 dark:text-white ring-1 ring-inset ring-slate-200/50 dark:ring-white/10 placeholder:text-slate-400 focus:ring-2 focus:ring-inset focus:ring-cyan-500 text-lg outline-none transition-all shadow-inner bg-white/50 dark:bg-black/20 text-start"
           />
         </div>
         {loading ? (
@@ -299,7 +299,7 @@ export default function DownloadForm() {
       {/* Processing Indicator */}
       {loading && (
         <div className="w-full mt-6 flex items-center justify-center gap-3 text-cyan-600 dark:text-cyan-400">
-          <div className="h-1.5 flex-1 max-w-xs bg-slate-200 dark:bg-slate-800 rounded-full overflow-hidden">
+          <div className="h-1.5 flex-1 max-w-xs bg-slate-200 dark:bg-white/10 rounded-full overflow-hidden">
             <div className="h-full bg-gradient-to-r from-cyan-500 to-purple-500 rounded-full" style={{ width: '60%' }} />
           </div>
           <span className="text-sm font-medium">{t('fetchingData')}</span>
@@ -315,9 +315,9 @@ export default function DownloadForm() {
               animate={{ opacity: 1, y: 0, scale: 1 }}
               exit={{ opacity: 0, scale: 0.9 }}
               transition={{ duration: 0.4, ease: "easeOut" }}
-              className="w-full bg-white/85 dark:bg-slate-900/85 backdrop-blur-xl rounded-3xl shadow-2xl dark:shadow-cyan-900/10 border border-white/50 dark:border-cyan-500/40 p-6 flex flex-col md:flex-row gap-8 items-center text-start"
+              className="w-full bg-white/85 dark:bg-black/85 backdrop-blur-xl rounded-3xl shadow-2xl dark:shadow-cyan-900/10 border border-white/50 dark:border-cyan-500/40 p-6 flex flex-col md:flex-row gap-8 items-center text-start"
             >
-              <div className="w-full md:w-1/3 aspect-[3/4] rounded-2xl overflow-hidden bg-slate-100 dark:bg-slate-800 relative flex-shrink-0 border-4 border-white/50 dark:border-slate-800/50 shadow-lg">
+              <div className="w-full md:w-1/3 aspect-[3/4] rounded-2xl overflow-hidden bg-slate-100 dark:bg-neutral-900 relative flex-shrink-0 border-4 border-white/50 dark:border-white/5 shadow-lg">
                 <img src={videoData.cover} alt="Video Cover" width="300" height="400" className="w-full h-full object-cover" loading="lazy" />
                 <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent flex flex-col justify-end p-4">
                   <div className="w-10 h-10 rounded-full bg-white/20 backdrop-blur-md flex items-center justify-center border border-white/30">
@@ -371,7 +371,7 @@ export default function DownloadForm() {
                             </span>
                             <span className="text-lg font-black text-cyan-600 dark:text-cyan-400 drop-shadow-sm leading-none">{Math.round(videoProgress)}%</span>
                           </div>
-                          <div className="w-full bg-gray-100/10 dark:bg-slate-800/40 backdrop-blur-sm border border-white/10 dark:border-cyan-500/10 rounded-full h-5 overflow-hidden p-1 shadow-inner">
+                          <div className="w-full bg-gray-100/10 dark:bg-neutral-900/40 backdrop-blur-sm border border-white/10 dark:border-cyan-500/10 rounded-full h-5 overflow-hidden p-1 shadow-inner">
                             <div 
                               className="h-full rounded-full bg-gradient-to-r from-cyan-400 to-blue-600 transition-all duration-300 ease-out shadow-[0_0_15px_rgba(6,182,212,0.5)] animate-pulse" 
                               style={{ width: `${videoProgress}%` }}
@@ -389,7 +389,7 @@ export default function DownloadForm() {
                             onClick={() => videoData.musicUrl && handleDownload(videoData.musicUrl, 'music')}
                             disabled={musicDownloading}
                             style={{ minWidth: '220px' }}
-                            className="flex items-center justify-center gap-2 rounded-xl bg-white/50 dark:bg-slate-800/50 backdrop-blur-md px-6 py-4 text-lg font-bold text-slate-800 dark:text-white hover:shadow-lg border border-slate-200 dark:border-slate-600 disabled:opacity-70 disabled:cursor-not-allowed transition-all"
+                            className="flex items-center justify-center gap-2 rounded-xl bg-white/50 dark:bg-white/5 backdrop-blur-md px-6 py-4 text-lg font-bold text-slate-800 dark:text-white hover:shadow-lg border border-slate-200 dark:border-white/10 disabled:opacity-70 disabled:cursor-not-allowed transition-all"
                             aria-label={musicDownloading ? t('downloadingMusicAria') : t('musicQuality')}
                           >
                             {musicDownloading ? (
@@ -415,7 +415,7 @@ export default function DownloadForm() {
                                 </span>
                                 <span className="text-lg font-black text-cyan-600 dark:text-cyan-400 drop-shadow-sm leading-none">{Math.round(musicProgress)}%</span>
                               </div>
-                              <div className="w-full bg-gray-100/10 dark:bg-slate-800/40 backdrop-blur-sm border border-white/10 dark:border-cyan-500/10 rounded-full h-5 overflow-hidden p-1 shadow-inner">
+                              <div className="w-full bg-gray-100/10 dark:bg-neutral-900/40 backdrop-blur-sm border border-white/10 dark:border-cyan-500/10 rounded-full h-5 overflow-hidden p-1 shadow-inner">
                                 <div 
                                   className="h-full rounded-full bg-gradient-to-r from-cyan-400 to-blue-600 transition-all duration-300 ease-out shadow-[0_0_15px_rgba(6,182,212,0.5)] animate-pulse" 
                                   style={{ width: `${musicProgress}%` }}
