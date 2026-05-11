@@ -1,4 +1,6 @@
 import { useEffect } from "react";
+import { useLocation } from "react-router";
+import { languages } from "../config/LanguageConfig";
 
 interface SEOProps {
   title?: string;
@@ -6,18 +8,48 @@ interface SEOProps {
 }
 
 export default function SEO({ title, description }: SEOProps) {
+  const location = useLocation();
   const finalTitle = title || "SavePro | Download TikTok Without Watermark - Instant HD [2026]";
   const finalDescription = description || "1-Click TikTok downloader. Save videos in Ultra-HD without watermark instantly. Free forever, no registration. Try the fastest tool now!";
 
   useEffect(() => {
-    // Update document title and meta description
+    // 1. Update document title and meta description
     document.title = finalTitle;
     const metaDescription = document.querySelector('meta[name="description"]');
     if (metaDescription) {
       metaDescription.setAttribute("content", finalDescription);
     }
 
-    // Inject JSON-LD
+    // 2. Manage Canonical Tag
+    const canonicalUrl = `https://savepro.site${location.pathname === "/" ? "" : location.pathname}`;
+    let canonicalLink = document.querySelector('link[rel="canonical"]');
+    if (!canonicalLink) {
+      canonicalLink = document.createElement("link");
+      canonicalLink.setAttribute("rel", "canonical");
+      document.head.appendChild(canonicalLink);
+    }
+    canonicalLink.setAttribute("href", canonicalUrl);
+
+    // 3. Manage Hreflang Tags
+    const hreflangLinks: HTMLLinkElement[] = [];
+    languages.forEach((lang) => {
+      const link = document.createElement("link");
+      link.setAttribute("rel", "alternate");
+      link.setAttribute("hreflang", lang.code);
+      link.setAttribute("href", canonicalUrl); // In this implementation, same URL handles multiple languages via context
+      document.head.appendChild(link);
+      hreflangLinks.push(link);
+    });
+
+    // Add x-default
+    const xDefault = document.createElement("link");
+    xDefault.setAttribute("rel", "alternate");
+    xDefault.setAttribute("hreflang", "x-default");
+    xDefault.setAttribute("href", canonicalUrl);
+    document.head.appendChild(xDefault);
+    hreflangLinks.push(xDefault);
+
+    // 4. Inject JSON-LD
     const schema = {
       "@context": "https://schema.org",
       "@graph": [
@@ -28,7 +60,7 @@ export default function SEO({ title, description }: SEOProps) {
           "url": "https://savepro.site",
           "logo": {
             "@type": "ImageObject",
-            "url": "https://savepro.site/logo.png"
+            "url": "https://savepro.site/favicon-512x512.png"
           },
           "contactPoint": {
             "@type": "ContactPoint",
@@ -44,14 +76,6 @@ export default function SEO({ title, description }: SEOProps) {
           "description": finalDescription,
           "publisher": {
             "@id": "https://savepro.site/#organization"
-          },
-          "potentialAction": {
-            "@type": "SearchAction",
-            "target": {
-              "@type": "EntryPoint",
-              "urlTemplate": "https://savepro.site/?q={search_term_string}"
-            },
-            "query-input": "required name=search_term_string"
           }
         },
         {
@@ -69,16 +93,6 @@ export default function SEO({ title, description }: SEOProps) {
             "price": "0",
             "priceCurrency": "USD"
           }
-        },
-        {
-          "@type": "WebApplication",
-          "name": "SavePro Online TikTok Downloader",
-          "url": "https://savepro.site",
-          "description": "Premium online tool to download TikTok videos without watermark in high quality.",
-          "applicationCategory": "MultimediaApplication",
-          "browserRequirements": "Requires JavaScript and HTML5",
-          "permissions": "None",
-          "isAccessibleForFree": true
         }
       ]
     };
@@ -91,11 +105,12 @@ export default function SEO({ title, description }: SEOProps) {
 
     return () => {
       const existingScript = document.getElementById("json-ld-seo");
-      if (existingScript) {
-        document.head.removeChild(existingScript);
-      }
+      if (existingScript) document.head.removeChild(existingScript);
+      hreflangLinks.forEach(link => {
+        if (link.parentNode) document.head.removeChild(link);
+      });
     };
-  }, [finalTitle, finalDescription]);
+  }, [finalTitle, finalDescription, location.pathname]);
 
   return null;
 }

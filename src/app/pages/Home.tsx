@@ -114,8 +114,10 @@ export default function Home() {
         description={t('seoDescription')}
       />
       {/* Hero Section */}
-      <section className="relative overflow-hidden bg-slate-50 dark:bg-slate-950 py-16 md:py-24 border-b border-slate-200 dark:border-slate-800 transition-colors">
-        <div className="absolute inset-0 z-0 opacity-40 bg-[radial-gradient(ellipse_at_top,_var(--tw-gradient-stops))] from-blue-100 via-slate-50 to-slate-50 dark:from-blue-900/20 dark:via-slate-950 dark:to-slate-950"></div>
+      <section className="relative overflow-hidden py-20 md:py-32 transition-colors">
+        <div className="absolute top-[-10%] left-[-10%] w-[50%] h-[50%] bg-cyan-500/10 dark:bg-cyan-500/20 rounded-full blur-[120px] -z-10"></div>
+        <div className="absolute bottom-0 right-[-5%] w-[40%] h-[40%] bg-purple-500/10 dark:bg-purple-500/20 rounded-full blur-[100px] -z-10"></div>
+        <div className="absolute inset-0 z-0 opacity-40 bg-[radial-gradient(ellipse_at_top,_var(--tw-gradient-stops))] from-blue-100 via-transparent to-transparent dark:from-blue-900/20 dark:via-transparent dark:to-transparent"></div>
         <div className="container mx-auto px-4 relative z-10 flex flex-col items-center text-center">
 
           <h1 className="text-4xl md:text-5xl lg:text-6xl font-black text-slate-900 dark:text-white mb-6 leading-tight max-w-4xl tracking-tight">
@@ -141,7 +143,7 @@ export default function Home() {
 
       {/* Download History Section */}
       {showHistory && history.length > 0 && (
-        <section className="py-12 bg-white dark:bg-slate-900 border-b border-slate-200 dark:border-slate-800 transition-colors">
+        <section className="py-16 bg-white/50 dark:bg-slate-900/50 backdrop-blur-sm transition-colors">
           <div className="container mx-auto px-4">
             <div className="flex items-center justify-between mb-6">
               <h2 className="text-2xl font-bold text-slate-900 dark:text-white flex items-center gap-2">
@@ -188,7 +190,7 @@ export default function Home() {
       )}
 
       {/* Features Section */}
-      <section id="features" className="py-16 md:py-24 bg-slate-50 dark:bg-slate-900 border-b border-slate-200 dark:border-slate-800 transition-colors scroll-mt-20">
+      <section id="features" className="py-20 md:py-32 transition-colors scroll-mt-20">
         <div className="container mx-auto px-4">
           <div className="text-center mb-12">
             <h2 className="text-3xl md:text-4xl font-bold text-slate-900 dark:text-white mb-4">
@@ -245,8 +247,14 @@ export default function Home() {
         </div>
       </section>
 
+      {/* Visual Bridge Glow */}
+      <div className="h-0 relative z-0 overflow-visible">
+        <div className="absolute top-0 right-0 w-[600px] h-[600px] bg-purple-500/5 dark:bg-purple-500/10 rounded-full blur-[120px] -translate-y-1/2 translate-x-1/4"></div>
+        <div className="absolute top-0 left-0 w-[400px] h-[400px] bg-cyan-500/5 dark:bg-cyan-500/10 rounded-full blur-[100px] -translate-y-1/2 -translate-x-1/4"></div>
+      </div>
+
       {/* How it works */}
-      <section id="how-to-use" className="py-16 md:py-24 bg-white dark:bg-slate-900 border-b border-slate-200 dark:border-slate-800 transition-colors scroll-mt-20">
+      <section id="how-to-use" className="py-20 md:py-32 transition-colors scroll-mt-20">
         <div className="container mx-auto px-4">
           <div className="text-center mb-12">
             <h2 className="text-3xl md:text-4xl font-bold text-slate-900 dark:text-white mb-4">{t('howItWorksTitle')}</h2>
@@ -273,7 +281,7 @@ export default function Home() {
       </section>
 
       {/* Detailed SEO Guide Section */}
-      <section className="py-16 md:py-24 bg-slate-50 dark:bg-slate-950 transition-colors">
+      <section className="py-20 md:py-32 transition-colors">
         <div className="container mx-auto px-4 max-w-4xl">
           <div className="bg-white dark:bg-slate-900 rounded-3xl p-8 md:p-12 shadow-sm border border-slate-200 dark:border-slate-800">
             <h2 className="text-3xl font-bold text-slate-900 dark:text-white mb-6">
@@ -319,7 +327,7 @@ export default function Home() {
       </section>
 
       {/* FAQ Section */}
-      <section id="faq" className="py-16 md:py-24 bg-slate-50 dark:bg-slate-900 transition-colors scroll-mt-20">
+      <section id="faq" className="py-20 md:py-32 transition-colors scroll-mt-20">
         <div className="container mx-auto px-4">
           <div className="text-center mb-12">
             <h2 className="text-3xl md:text-4xl font-bold text-slate-900 dark:text-white mb-4">{t('faqTitle')}</h2>
@@ -336,7 +344,9 @@ export default function Home() {
       </section>
 
       {/* Contact Section */}
-      <section id="contact" className="py-16 md:py-24 bg-white dark:bg-slate-950 transition-colors scroll-mt-20">
+      <section id="contact" className="py-20 md:py-32 transition-colors scroll-mt-20 relative overflow-hidden">
+        {/* Subtle background glow for unification */}
+        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[800px] bg-blue-500/5 dark:bg-blue-500/10 rounded-full blur-[120px] -z-10"></div>
         <div className="container mx-auto px-4">
           <div className="max-w-4xl mx-auto">
             <div className="text-center mb-12">

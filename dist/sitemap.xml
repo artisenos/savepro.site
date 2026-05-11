@@ -2,20 +2,44 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url>
     <loc>https://savepro.site/</loc>
-    <lastmod>2024-05-09</lastmod>
-    <changefreq>weekly</changefreq>
+    <lastmod>2026-05-11</lastmod>
+    <changefreq>always</changefreq>
     <priority>1.0</priority>
   </url>
   <url>
     <loc>https://savepro.site/privacy-policy</loc>
-    <lastmod>2024-05-09</lastmod>
+    <lastmod>2026-05-11</lastmod>
     <changefreq>monthly</changefreq>
-    <priority>0.5</priority>
+    <priority>0.3</priority>
   </url>
   <url>
     <loc>https://savepro.site/terms-of-service</loc>
-    <lastmod>2024-05-09</lastmod>
+    <lastmod>2026-05-11</lastmod>
     <changefreq>monthly</changefreq>
-    <priority>0.5</priority>
+    <priority>0.3</priority>
+  </url>
+  <url>
+    <loc>https://savepro.site/dmca</loc>
+    <lastmod>2026-05-11</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.3</priority>
+  </url>
+  <url>
+    <loc>https://savepro.site/disclaimer</loc>
+    <lastmod>2026-05-11</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.3</priority>
+  </url>
+  <url>
+    <loc>https://savepro.site/about-us</loc>
+    <lastmod>2026-05-11</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.3</priority>
+  </url>
+  <url>
+    <loc>https://savepro.site/contact</loc>
+    <lastmod>2026-05-11</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.3</priority>
   </url>
 </urlset>
