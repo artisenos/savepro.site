@@ -22,6 +22,8 @@ export default function DownloadForm() {
   const [videoData, setVideoData] = useState<VideoData | null>(null);
   const [videoDownloading, setVideoDownloading] = useState(false);
   const [musicDownloading, setMusicDownloading] = useState(false);
+  const [videoProgress, setVideoProgress] = useState(0);
+  const [musicProgress, setMusicProgress] = useState(0);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -146,8 +148,29 @@ export default function DownloadForm() {
     // Set loading state for the specific button being clicked
     if (type === 'video') {
       setVideoDownloading(true);
+      setVideoProgress(1);
+      const interval = setInterval(() => {
+        setVideoProgress(prev => {
+          if (prev >= 100) {
+            clearInterval(interval);
+            return 100;
+          }
+          // Increment by ~2.5% every 100ms to reach 100% in 4 seconds
+          return Math.min(100, prev + 2.5);
+        });
+      }, 100);
     } else {
       setMusicDownloading(true);
+      setMusicProgress(1);
+      const interval = setInterval(() => {
+        setMusicProgress(prev => {
+          if (prev >= 100) {
+            clearInterval(interval);
+            return 100;
+          }
+          return Math.min(100, prev + 2.5);
+        });
+      }, 100);
     }
 
     const toastId = `dl-${type}-error`;
@@ -216,8 +239,11 @@ export default function DownloadForm() {
       // Always reset loading state
       if (type === 'video') {
         setVideoDownloading(false);
+        // Let the progress bar stay at 100% for a second before hiding
+        setTimeout(() => setVideoProgress(0), 1000);
       } else {
         setMusicDownloading(false);
+        setTimeout(() => setMusicProgress(0), 1000);
       }
     }
   };
@@ -240,29 +266,23 @@ export default function DownloadForm() {
             className="block w-full rounded-xl border-0 py-4 pr-12 pl-4 bg-transparent text-slate-900 dark:text-white ring-1 ring-inset ring-slate-200/50 dark:ring-slate-700/50 placeholder:text-slate-400 focus:ring-2 focus:ring-inset focus:ring-cyan-500 text-lg outline-none transition-all shadow-inner bg-white/50 dark:bg-black/20"
           />
         </div>
-        <button
-          type="submit"
-          disabled={loading}
-          style={{ minWidth: '160px' }}
-          className="relative flex items-center justify-center gap-2 rounded-xl bg-cyan-600 px-8 py-4 text-lg font-bold text-white shadow-lg shadow-cyan-600/30 hover:bg-cyan-500 hover:shadow-cyan-500/50 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-cyan-600 disabled:opacity-70 disabled:cursor-not-allowed overflow-hidden"
-        >
-          {loading && (
-            <div className="absolute inset-0 bg-gradient-to-r from-cyan-400 to-purple-500 opacity-50 animate-pulse"></div>
-          )}
-          <span className="relative z-10 flex items-center gap-2">
-            {loading ? (
-              <>
-                <Loader2 className="h-6 w-6 animate-spin" />
-                {t('processing')}
-              </>
-            ) : (
-              <>
-                <Download className="h-6 w-6" />
-                {t('downloadBtn')}
-              </>
-            )}
-          </span>
-        </button>
+        {loading ? (
+          <div className="flex items-center justify-center min-w-[160px] py-4">
+            <Loader2 className="h-10 w-10 animate-spin text-savepro-primary" />
+          </div>
+        ) : (
+          <button
+            type="submit"
+            disabled={loading}
+            style={{ minWidth: '160px' }}
+            className="relative flex items-center justify-center gap-2 rounded-xl bg-cyan-600 px-8 py-4 text-lg font-bold text-white shadow-lg shadow-cyan-600/30 hover:bg-cyan-500 hover:shadow-cyan-500/50 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-cyan-600 disabled:opacity-70 disabled:cursor-not-allowed overflow-hidden"
+          >
+            <span className="relative z-10 flex items-center gap-2">
+              <Download className="h-6 w-6" />
+              {t('downloadBtn')}
+            </span>
+          </button>
+        )}
       </form>
 
       {/* Processing Indicator */}
@@ -307,40 +327,74 @@ export default function DownloadForm() {
                 </motion.div>
 
                 <div className="flex flex-col gap-3 mt-2">
-                    <button
-                      onClick={() => handleDownload(videoData.videoUrl, 'video')}
-                      disabled={videoDownloading}
-                      style={{ minWidth: '220px' }}
-                      className="flex items-center justify-center gap-2 rounded-xl bg-gradient-to-r from-cyan-600 to-purple-600 px-6 py-4 text-lg font-bold text-white shadow-lg shadow-cyan-500/30 hover:shadow-cyan-500/50 hover:from-cyan-500 hover:to-purple-500 border border-cyan-400/20 disabled:opacity-70 disabled:cursor-not-allowed group"
-                      aria-label={videoDownloading ? t('downloadingVideoAria') : t('videoQuality')}
-                    >
-                      {videoDownloading ? (
-                        <Loader2 className="w-6 h-6 animate-spin" />
-                      ) : (
-                        <>
-                          <Download className="w-6 h-6 group-hover:bounce" />
-                          {t('videoQuality')}
-                        </>
+                    <div className="flex flex-col gap-1">
+                      <button
+                        onClick={() => handleDownload(videoData.videoUrl, 'video')}
+                        disabled={videoDownloading}
+                        style={{ minWidth: '220px' }}
+                        className="flex items-center justify-center gap-2 rounded-xl bg-gradient-to-r from-cyan-600 to-purple-600 px-6 py-4 text-lg font-bold text-white shadow-lg shadow-cyan-500/30 hover:shadow-cyan-500/50 hover:from-cyan-500 hover:to-purple-500 border border-cyan-400/20 disabled:opacity-70 disabled:cursor-not-allowed group"
+                        aria-label={videoDownloading ? t('downloadingVideoAria') : t('videoQuality')}
+                      >
+                        {videoDownloading ? (
+                          <Loader2 className="w-6 h-6 animate-spin" />
+                        ) : (
+                          <>
+                            <Download className="w-6 h-6 group-hover:bounce" />
+                            {t('videoQuality')}
+                          </>
+                        )}
+                      </button>
+                      
+                      {videoProgress > 0 && (
+                        <div className="w-full mt-2 animate-in fade-in slide-in-from-top-1 px-1">
+                          <div className="flex justify-between mb-1">
+                            <span className="text-[10px] font-bold text-savepro-primary">{Math.round(videoProgress)}%</span>
+                            <span className="text-[10px] font-medium text-slate-500 dark:text-cyan-400">{t('processing')}...</span>
+                          </div>
+                          <div className="w-full bg-slate-200 dark:bg-slate-800 rounded-full h-1.5 overflow-hidden">
+                            <div 
+                              className="bg-savepro-primary h-full rounded-full transition-all duration-300 ease-out" 
+                              style={{ width: `${videoProgress}%` }}
+                            />
+                          </div>
+                        </div>
                       )}
-                    </button>
+                    </div>
                   
                     {videoData.musicUrl && (
-                        <button
-                          onClick={() => handleDownload(videoData.musicUrl, 'music')}
-                          disabled={musicDownloading}
-                          style={{ minWidth: '220px' }}
-                          className="flex items-center justify-center gap-2 rounded-xl bg-white/50 dark:bg-slate-800/50 backdrop-blur-md px-6 py-4 text-lg font-bold text-slate-800 dark:text-white hover:bg-white dark:hover:bg-slate-700 hover:shadow-lg border border-slate-200 dark:border-slate-600 disabled:opacity-70 disabled:cursor-not-allowed"
-                          aria-label={musicDownloading ? t('downloadingMusicAria') : t('musicQuality')}
-                        >
-                          {musicDownloading ? (
-                            <Loader2 className="w-5 h-5 animate-spin" />
-                          ) : (
-                            <>
-                              <Music className="w-5 h-5 text-purple-500" />
-                              {t('musicQuality')}
-                            </>
+                        <div className="flex flex-col gap-1">
+                          <button
+                            onClick={() => handleDownload(videoData.musicUrl, 'music')}
+                            disabled={musicDownloading}
+                            style={{ minWidth: '220px' }}
+                            className="flex items-center justify-center gap-2 rounded-xl bg-white/50 dark:bg-slate-800/50 backdrop-blur-md px-6 py-4 text-lg font-bold text-slate-800 dark:text-white hover:bg-white dark:hover:bg-slate-700 hover:shadow-lg border border-slate-200 dark:border-slate-600 disabled:opacity-70 disabled:cursor-not-allowed"
+                            aria-label={musicDownloading ? t('downloadingMusicAria') : t('musicQuality')}
+                          >
+                            {musicDownloading ? (
+                              <Loader2 className="w-5 h-5 animate-spin" />
+                            ) : (
+                              <>
+                                <Music className="w-5 h-5 text-purple-500" />
+                                {t('musicQuality')}
+                              </>
+                            )}
+                          </button>
+
+                          {musicProgress > 0 && (
+                            <div className="w-full mt-2 animate-in fade-in slide-in-from-top-1 px-1">
+                              <div className="flex justify-between mb-1">
+                                <span className="text-[10px] font-bold text-savepro-primary">{Math.round(musicProgress)}%</span>
+                                <span className="text-[10px] font-medium text-slate-500 dark:text-cyan-400">{t('processing')}...</span>
+                              </div>
+                              <div className="w-full bg-slate-200 dark:bg-slate-800 rounded-full h-1.5 overflow-hidden">
+                                <div 
+                                  className="bg-savepro-primary h-full rounded-full transition-all duration-300 ease-out" 
+                                  style={{ width: `${musicProgress}%` }}
+                                />
+                              </div>
+                            </div>
                           )}
-                        </button>
+                        </div>
                       )}
                 </div>
               </div>

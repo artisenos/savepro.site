@@ -48,6 +48,7 @@ export default function Footer() {
               <li><a href="#features" className="hover:text-cyan-500 transition-colors flex items-center gap-2">{t('features')}</a></li>
               <li><a href="#how-to-use" className="hover:text-cyan-500 transition-colors flex items-center gap-2">{t('howToUse')}</a></li>
               <li><a href="#faq" className="hover:text-cyan-500 transition-colors flex items-center gap-2">{t('faq')}</a></li>
+              <li><Link to="/about-us" onClick={handleScrollToTop} className="hover:text-cyan-500 transition-colors flex items-center gap-2">{t('aboutUsTitle')}</Link></li>
             </ul>
           </div>
 
@@ -61,6 +62,7 @@ export default function Footer() {
               <li><Link to="/privacy-policy" onClick={handleScrollToTop} className="hover:text-purple-500 transition-colors">{t('privacyPolicy')}</Link></li>
               <li><Link to="/terms-of-service" onClick={handleScrollToTop} className="hover:text-purple-500 transition-colors">{t('termsOfService')}</Link></li>
               <li><Link to="/dmca" onClick={handleScrollToTop} className="hover:text-purple-500 transition-colors">{t('dmca')}</Link></li>
+              <li><Link to="/disclaimer" onClick={handleScrollToTop} className="hover:text-purple-500 transition-colors">{t('disclaimerTitle')}</Link></li>
             </ul>
           </div>
 

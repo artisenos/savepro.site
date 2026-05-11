@@ -9,6 +9,8 @@ const PrivacyPolicy = lazy(() => import("./pages/PrivacyPolicy"));
 const TermsOfService = lazy(() => import("./pages/TermsOfService"));
 const DMCA = lazy(() => import("./pages/DMCA"));
 const Contact = lazy(() => import("./pages/Contact"));
+const AboutUs = lazy(() => import("./pages/AboutUs"));
+const Disclaimer = lazy(() => import("./pages/Disclaimer"));
 
 function Root() {
   return (
@@ -35,6 +37,8 @@ export const router = createBrowserRouter([
       { path: "terms-of-service", Component: TermsOfService },
       { path: "dmca", Component: DMCA },
       { path: "contact", Component: Contact },
+      { path: "about-us", Component: AboutUs },
+      { path: "disclaimer", Component: Disclaimer },
     ],
   },
 ]);
