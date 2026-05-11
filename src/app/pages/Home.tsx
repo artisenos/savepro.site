@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router";
-import { Download, Link as LinkIcon, Zap, Video, CheckCircle2, ChevronDown, Music, Clock, Trash2, X, Loader2 } from "lucide-react";
+import { Download, Link as LinkIcon, Zap, Video, CheckCircle2, ChevronDown, Music, Clock, Trash2, X, Loader2, ShieldCheck, MonitorSmartphone, Infinity } from "lucide-react";
 import { toast } from "sonner";
 import DownloadForm from "../components/DownloadForm";
 import { useLanguage } from "../contexts/LanguageContext";
@@ -108,7 +108,7 @@ export default function Home() {
   };
 
   return (
-    <div dir={language === 'ar' ? 'rtl' : 'ltr'} className="flex flex-col w-full">
+    <div dir="ltr" className="flex flex-col w-full">
       <SEO 
         title={t('seoTitle')}
         description={t('seoDescription')}
@@ -199,26 +199,47 @@ export default function Home() {
             </p>
           </div>
           <div className="grid md:grid-cols-3 gap-8 max-w-6xl mx-auto">
-            <div className="bg-white dark:bg-slate-800 rounded-xl p-6 shadow-sm border border-slate-100 dark:border-slate-700 text-center">
+            <div className="bg-white dark:bg-slate-800 rounded-xl p-6 shadow-sm border border-slate-100 dark:border-slate-700 text-center hover:shadow-md transition-shadow">
               <div className="w-12 h-12 bg-blue-100 dark:bg-blue-900 rounded-full flex items-center justify-center mx-auto mb-4">
                 <Zap className="w-6 h-6 text-blue-600 dark:text-blue-400" />
               </div>
               <h3 className="text-xl font-semibold text-slate-900 dark:text-white mb-2">{t('featureFastTitle')}</h3>
               <p className="text-slate-600 dark:text-slate-300">{t('featureFastDesc')}</p>
             </div>
-            <div className="bg-white dark:bg-slate-800 rounded-xl p-6 shadow-sm border border-slate-100 dark:border-slate-700 text-center">
+            <div className="bg-white dark:bg-slate-800 rounded-xl p-6 shadow-sm border border-slate-100 dark:border-slate-700 text-center hover:shadow-md transition-shadow">
               <div className="w-12 h-12 bg-green-100 dark:bg-green-900 rounded-full flex items-center justify-center mx-auto mb-4">
                 <CheckCircle2 className="w-6 h-6 text-green-600 dark:text-green-400" />
               </div>
               <h3 className="text-xl font-semibold text-slate-900 dark:text-white mb-2">{t('featureNoWatermarkTitle')}</h3>
               <p className="text-slate-600 dark:text-slate-300">{t('featureNoWatermarkDesc')}</p>
             </div>
-            <div className="bg-white dark:bg-slate-800 rounded-xl p-6 shadow-sm border border-slate-100 dark:border-slate-700 text-center">
+            <div className="bg-white dark:bg-slate-800 rounded-xl p-6 shadow-sm border border-slate-100 dark:border-slate-700 text-center hover:shadow-md transition-shadow">
               <div className="w-12 h-12 bg-purple-100 dark:bg-purple-900 rounded-full flex items-center justify-center mx-auto mb-4">
                 <Music className="w-6 h-6 text-purple-600 dark:text-purple-400" />
               </div>
               <h3 className="text-xl font-semibold text-slate-900 dark:text-white mb-2">{t('featureMusicTitle')}</h3>
               <p className="text-slate-600 dark:text-slate-300">{t('featureMusicDesc')}</p>
+            </div>
+            <div className="bg-white dark:bg-slate-800 rounded-xl p-6 shadow-sm border border-slate-100 dark:border-slate-700 text-center hover:shadow-md transition-shadow">
+              <div className="w-12 h-12 bg-cyan-100 dark:bg-cyan-900 rounded-full flex items-center justify-center mx-auto mb-4">
+                <ShieldCheck className="w-6 h-6 text-cyan-600 dark:text-cyan-400" />
+              </div>
+              <h3 className="text-xl font-semibold text-slate-900 dark:text-white mb-2">{t('featureSecurityTitle')}</h3>
+              <p className="text-slate-600 dark:text-slate-300">{t('featureSecurityDesc')}</p>
+            </div>
+            <div className="bg-white dark:bg-slate-800 rounded-xl p-6 shadow-sm border border-slate-100 dark:border-slate-700 text-center hover:shadow-md transition-shadow">
+              <div className="w-12 h-12 bg-orange-100 dark:bg-orange-900 rounded-full flex items-center justify-center mx-auto mb-4">
+                <MonitorSmartphone className="w-6 h-6 text-orange-600 dark:text-orange-400" />
+              </div>
+              <h3 className="text-xl font-semibold text-slate-900 dark:text-white mb-2">{t('featureCompatibilityTitle')}</h3>
+              <p className="text-slate-600 dark:text-slate-300">{t('featureCompatibilityDesc')}</p>
+            </div>
+            <div className="bg-white dark:bg-slate-800 rounded-xl p-6 shadow-sm border border-slate-100 dark:border-slate-700 text-center hover:shadow-md transition-shadow">
+              <div className="w-12 h-12 bg-pink-100 dark:bg-pink-900 rounded-full flex items-center justify-center mx-auto mb-4">
+                <Infinity className="w-6 h-6 text-pink-600 dark:text-pink-400" />
+              </div>
+              <h3 className="text-xl font-semibold text-slate-900 dark:text-white mb-2">{t('featureUnlimitedTitle')}</h3>
+              <p className="text-slate-600 dark:text-slate-300">{t('featureUnlimitedDesc')}</p>
             </div>
           </div>
         </div>

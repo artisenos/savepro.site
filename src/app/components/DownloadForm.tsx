@@ -260,7 +260,7 @@ export default function DownloadForm() {
   };
 
   return (
-    <div dir={language === 'ar' ? 'rtl' : 'ltr'} className="w-full max-w-3xl mx-auto flex flex-col items-center z-20 relative">
+    <div dir="ltr" className="w-full max-w-3xl mx-auto flex flex-col items-center z-20 relative">
       <form
         onSubmit={handleSubmit} 
         className="w-full bg-white/70 dark:bg-slate-900/70 backdrop-blur-xl p-2 rounded-2xl shadow-[0_8px_30px_rgb(0,0,0,0.12)] dark:shadow-[0_8px_30px_rgba(0,255,255,0.1)] border border-white/20 dark:border-cyan-500/20 flex flex-col md:flex-row gap-2 relative overflow-hidden"
