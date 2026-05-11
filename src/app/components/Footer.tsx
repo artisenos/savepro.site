@@ -1,7 +1,9 @@
 import { Link } from "react-router";
 import { ShieldCheck, Mail, Info, ExternalLink, Download, Globe, Github } from "lucide-react";
+import { useLanguage } from "../contexts/LanguageContext";
 
 export default function Footer() {
+  const { t } = useLanguage();
   const handleScrollToTop = () => {
     window.scrollTo({ top: 0, behavior: 'smooth' });
   };
@@ -25,12 +27,12 @@ export default function Footer() {
               </span>
             </Link>
             <p className="text-slate-500 dark:text-slate-400 leading-relaxed">
-              Premium TikTok video downloader. Download high-quality videos without watermark instantly. Fast, free, and secure.
+              {t('footerAbout')}
             </p>
             <div className="flex items-center gap-4">
               <div className="flex items-center gap-1.5 px-3 py-1 bg-green-500/10 border border-green-500/20 rounded-full">
                 <ShieldCheck className="w-4 h-4 text-green-500" />
-                <span className="text-xs font-bold text-green-600 dark:text-green-400 uppercase tracking-wider">Secure Connection</span>
+                <span className="text-xs font-bold text-green-600 dark:text-green-400 uppercase tracking-wider">{t('secureConnection')}</span>
               </div>
             </div>
           </div>
@@ -39,13 +41,13 @@ export default function Footer() {
           <div className="space-y-6">
             <h3 className="text-lg font-bold text-slate-900 dark:text-white flex items-center gap-2">
               <Globe className="w-5 h-5 text-cyan-500" />
-              Quick Links
+              {t('quickLinks')}
             </h3>
             <ul className="space-y-4 text-slate-600 dark:text-slate-300">
-              <li><Link to="/" onClick={handleScrollToTop} className="hover:text-cyan-500 transition-colors flex items-center gap-2">Home</Link></li>
-              <li><a href="#features" className="hover:text-cyan-500 transition-colors flex items-center gap-2">Features</a></li>
-              <li><a href="#how-to-use" className="hover:text-cyan-500 transition-colors flex items-center gap-2">How to Use</a></li>
-              <li><a href="#faq" className="hover:text-cyan-500 transition-colors flex items-center gap-2">FAQ</a></li>
+              <li><Link to="/" onClick={handleScrollToTop} className="hover:text-cyan-500 transition-colors flex items-center gap-2">{t('home')}</Link></li>
+              <li><a href="#features" className="hover:text-cyan-500 transition-colors flex items-center gap-2">{t('features')}</a></li>
+              <li><a href="#how-to-use" className="hover:text-cyan-500 transition-colors flex items-center gap-2">{t('howToUse')}</a></li>
+              <li><a href="#faq" className="hover:text-cyan-500 transition-colors flex items-center gap-2">{t('faq')}</a></li>
             </ul>
           </div>
 
@@ -53,12 +55,12 @@ export default function Footer() {
           <div className="space-y-6">
             <h3 className="text-lg font-bold text-slate-900 dark:text-white flex items-center gap-2">
               <ShieldCheck className="w-5 h-5 text-purple-500" />
-              Legal
+              {t('legal')}
             </h3>
             <ul className="space-y-4 text-slate-600 dark:text-slate-300">
-              <li><Link to="/privacy-policy" onClick={handleScrollToTop} className="hover:text-purple-500 transition-colors">Privacy Policy</Link></li>
-              <li><Link to="/terms-of-service" onClick={handleScrollToTop} className="hover:text-purple-500 transition-colors">Terms of Service</Link></li>
-              <li><Link to="/dmca" onClick={handleScrollToTop} className="hover:text-purple-500 transition-colors">DMCA Compliance</Link></li>
+              <li><Link to="/privacy-policy" onClick={handleScrollToTop} className="hover:text-purple-500 transition-colors">{t('privacyPolicy')}</Link></li>
+              <li><Link to="/terms-of-service" onClick={handleScrollToTop} className="hover:text-purple-500 transition-colors">{t('termsOfService')}</Link></li>
+              <li><Link to="/dmca" onClick={handleScrollToTop} className="hover:text-purple-500 transition-colors">{t('dmca')}</Link></li>
             </ul>
           </div>
 
@@ -66,10 +68,10 @@ export default function Footer() {
           <div className="space-y-6">
             <h3 className="text-lg font-bold text-slate-900 dark:text-white flex items-center gap-2">
               <Mail className="w-5 h-5 text-cyan-500" />
-              Support
+              {t('support')}
             </h3>
             <ul className="space-y-4 text-slate-600 dark:text-slate-300">
-              <li><Link to="/contact" onClick={handleScrollToTop} className="hover:text-cyan-500 transition-colors">Contact Us</Link></li>
+              <li><Link to="/contact" onClick={handleScrollToTop} className="hover:text-cyan-500 transition-colors">{t('contactUs')}</Link></li>
               <li><a href="mailto:support@savepro.site" className="hover:text-cyan-500 transition-colors font-medium">support@savepro.site</a></li>
               <li className="pt-2">
                 <div className="flex gap-4">
@@ -82,17 +84,18 @@ export default function Footer() {
         </div>
 
         <div className="pt-8 border-t border-slate-200/50 dark:border-slate-800/50 flex flex-col md:flex-row justify-between items-center gap-4 text-sm text-slate-500 dark:text-slate-400">
-          <p>© {new Date().getFullYear()} SavePro.site. All Rights Reserved.</p>
+          <p>© {new Date().getFullYear()} SavePro.site. {t('rightsReserved')}</p>
           <div className="flex items-center gap-6">
             <span className="flex items-center gap-1.5">
               <div className="w-2 h-2 bg-green-500 rounded-full animate-pulse"></div>
-              Systems Operational
+              {t('operational')}
             </span>
             <span className="text-slate-300 dark:text-slate-700">|</span>
-            <span>v1.2.0-stable</span>
+            <span>{t('version')} 1.2.0-stable</span>
           </div>
         </div>
       </div>
     </footer>
   );
 }
+

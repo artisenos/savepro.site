@@ -2,9 +2,11 @@ import { Link } from "react-router";
 import { Download, Moon, Sun } from "lucide-react";
 import { useTheme } from "./ThemeProvider";
 import LanguageSwitcher from "./LanguageSwitcher";
+import { useLanguage } from "../contexts/LanguageContext";
 
 export default function Header() {
   const { theme, setTheme } = useTheme();
+  const { t } = useLanguage();
 
   return (
     <header className="sticky top-0 z-50 bg-white dark:bg-slate-900 border-b border-slate-200 dark:border-slate-800 shadow-sm transition-colors">
@@ -23,7 +25,7 @@ export default function Header() {
           <button
             onClick={() => setTheme(theme === "dark" ? "light" : "dark")}
             className="p-2 rounded-lg bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300 hover:bg-slate-200 dark:hover:bg-slate-700 transition-colors"
-            aria-label={theme === "dark" ? "تفعيل الوضع النهاري" : "تفعيل الوضع الليلي"}
+            aria-label={theme === "dark" ? t('lightMode') : t('darkMode')}
           >
             <Sun className="h-5 w-5 hidden dark:block" />
             <Moon className="h-5 w-5 block dark:hidden" />
@@ -33,3 +35,4 @@ export default function Header() {
     </header>
   );
 }
+

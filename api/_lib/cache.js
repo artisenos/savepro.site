@@ -1,31 +1,29 @@
-import { Redis } from '@upstash/redis';
-import config from './config.js';
-
-let client = null;
-
-function getCache() {
-  if (client) return client;
-  if (!config.upstash.url || !config.upstash.token) return null;
-  client = new Redis({ url: config.upstash.url, token: config.upstash.token });
-  return client;
-}
+/**
+ * Simple in-memory cache.
+ * No external dependencies required.
+ */
+const memoryCache = new Map();
 
 export async function getFromCache(key) {
   try {
-    const redis = getCache();
-    if (!redis) return null;
-    const val = await redis.get(key);
-    return val ? JSON.parse(val) : null;
+    const entry = memoryCache.get(key);
+    if (entry && entry.expiry > Date.now()) {
+      return entry.data;
+    }
+    if (entry) memoryCache.delete(key);
+    return null;
   } catch {
     return null;
   }
 }
 
-export async function setToCache(key, data, ttl = config.cache.ttl) {
+export async function setToCache(key, data, ttl = 3600) {
   try {
-    const redis = getCache();
-    if (!redis) return;
-    await redis.setex(key, ttl, JSON.stringify(data));
+    memoryCache.set(key, {
+      data,
+      expiry: Date.now() + (ttl * 1000),
+    });
   } catch {
+    // Silently fail
   }
 }

@@ -1,4 +1,5 @@
 import { useState, useEffect } from "react";
+import { useNavigate } from "react-router";
 import { Download, Link as LinkIcon, Zap, Video, CheckCircle2, ChevronDown, Music, Clock, Trash2, X, Loader2 } from "lucide-react";
 import { toast } from "sonner";
 import DownloadForm from "../components/DownloadForm";
@@ -11,14 +12,33 @@ const forceHttps = (url: string | undefined): string | undefined => {
   return url.replace(/^http:\/\//i, 'https://');
 };
 
-const API_BRIDGE = '/api-bridge.php';
+const API_INFO = '/api/info';
+const API_DOWNLOAD = '/api/download';
 
 type DownloadState = 'idle' | 'processing' | 'downloading';
 
 export default function Home() {
   const { t } = useLanguage();
+  const navigate = useNavigate();
   const [history, setHistory] = useState<any[]>([]);
   const [showHistory, setShowHistory] = useState(true);
+
+  // Helper to handle clicks on links inside translated HTML strings
+  const handleHtmlClick = (e: React.MouseEvent<HTMLParagraphElement>) => {
+    const target = e.target as HTMLElement;
+    if (target.tagName === 'A') {
+      e.preventDefault();
+      const href = target.getAttribute('href');
+      if (href) {
+        if (href.startsWith('http')) {
+          window.open(href, '_blank');
+        } else {
+          navigate(href);
+        }
+      }
+    }
+  };
+
 
   useEffect(() => {
     try {
@@ -59,7 +79,7 @@ export default function Home() {
     const toastId = toast.loading(t(type === 'video' ? 'downloadingVideo' : 'downloadingMusic'));
 
     try {
-      const proxyUrl = `${API_BRIDGE}?action=download&url=${encodeURIComponent(fileUrl)}&type=${type}`;
+      const proxyUrl = `${API_DOWNLOAD}?url=${encodeURIComponent(fileUrl)}&type=${type}`;
       const response = await fetch(proxyUrl);
 
       if (!response.ok) {
@@ -109,7 +129,11 @@ export default function Home() {
 
 
 
-          <p className="mt-4 text-sm text-slate-500 dark:text-slate-400 z-20 relative" dangerouslySetInnerHTML={{ __html: t('termsAgreement') }} />
+          <p 
+            className="mt-4 text-sm text-slate-500 dark:text-slate-400 z-20 relative cursor-default" 
+            dangerouslySetInnerHTML={{ __html: t('termsAgreement') }} 
+            onClick={handleHtmlClick}
+          />
 
         </div>
       </section>

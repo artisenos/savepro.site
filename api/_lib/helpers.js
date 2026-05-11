@@ -58,3 +58,25 @@ export function setSecurityHeaders(res) {
   res.setHeader('X-XSS-Protection', '1; mode=block');
   res.setHeader('Referrer-Policy', 'no-referrer');
 }
+
+export function logEvent(level, category, message, data = {}) {
+  const log = {
+    timestamp: new Date().toISOString(),
+    level,
+    category,
+    message,
+    ...data,
+  };
+  console.log(JSON.stringify(log));
+}
+
+export function getErrorMessage(code) {
+  const messages = {
+    'INVALID_URL': 'الرابط غير صحيح، يرجى إدخال رابط تيك توك صحيح.',
+    'PRIVATE_VIDEO': 'هذا الفيديو خاص ولا يمكن تحميله.',
+    'DELETED_VIDEO': 'يبدو أن الفيديو قد تم حذفه.',
+    'RATE_LIMIT': 'لقد تجاوزت حد الطلبات المسموح به. يرجى الانتظار قليلاً.',
+    'SERVER_ERROR': 'حدث خطأ في الخادم، يرجى المحاولة مرة أخرى لاحقاً.',
+  };
+  return messages[code] || messages['SERVER_ERROR'];
+}

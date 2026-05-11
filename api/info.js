@@ -1,4 +1,4 @@
-import { isValidTikTokUrl, sanitizeInput, setCorsHeaders, setSecurityHeaders } from './_lib/helpers.js';
+import { isValidTikTokUrl, sanitizeInput, setCorsHeaders, setSecurityHeaders, logEvent } from './_lib/helpers.js';
 import { getFromCache, setToCache } from './_lib/cache.js';
 import { downloadVideo } from './_lib/services/downloader.js';
 import { checkAuth } from './_lib/middleware/auth.js';
@@ -11,54 +11,66 @@ export default async function handler(req, res) {
 
   if (req.method === 'OPTIONS') return res.status(200).end();
 
-  if (req.method !== 'GET') {
-    return res.status(405).json({ success: false, message: 'Method Not Allowed. Use GET.' });
+  const ip = req.headers['x-forwarded-for'] || req.socket?.remoteAddress || 'unknown';
+
+  if (req.method !== 'GET' && req.method !== 'POST') {
+    logEvent('WARN', 'API_INFO', 'Method Not Allowed', { ip, method: req.method });
+    return res.status(405).json({ code: 'METHOD_NOT_ALLOWED', msg: 'Method Not Allowed.' });
   }
 
   const authErr = checkAuth(req);
-  if (authErr) return res.status(401).json(authErr);
+  if (authErr) {
+    logEvent('WARN', 'API_INFO', 'Auth Failed', { ip });
+    return res.status(401).json({ code: 'UNAUTHORIZED', msg: authErr.message });
+  }
 
-  const ip = req.headers['x-forwarded-for'] || req.socket?.remoteAddress || 'unknown';
   const rateErr = await checkRateLimit(ip);
-  if (rateErr) return res.status(429).json(rateErr);
+  if (rateErr) {
+    logEvent('WARN', 'API_INFO', 'Rate Limit Exceeded', { ip });
+    return res.status(429).json({ code: 'RATE_LIMIT', msg: rateErr.message });
+  }
 
-  const rawUrl = req.query?.url || '';
+  const rawUrl = req.method === 'POST' ? req.body?.url : req.query?.url;
 
   if (!isValidTikTokUrl(rawUrl)) {
-    return res.status(400).json({
-      success: false,
-      message: 'Invalid TikTok URL.',
-    });
+    logEvent('INFO', 'API_INFO', 'Invalid URL', { ip, url: rawUrl });
+    return res.status(400).json({ code: 'INVALID_URL', msg: 'Invalid TikTok URL.' });
   }
 
   const cleanUrl = sanitizeInput(rawUrl);
   const cacheKey = `info:${cleanUrl}`;
 
-  const cached = await getFromCache(cacheKey);
-  if (cached) return res.status(200).json(cached);
-
   try {
-    const result = await downloadVideo(cleanUrl, { failFast: false });
+    const cached = await getFromCache(cacheKey);
+    if (cached) {
+      logEvent('INFO', 'API_INFO', 'Cache Hit', { ip, url: cleanUrl });
+      return res.status(200).json({ code: 0, data: cached });
+    }
 
-    const payload = {
-      success: result.success,
-      source: result.source,
-      title: result.title,
-      author: result.author,
-      cover: result.cover,
-      duration: result.duration,
-      stats: result.stats,
-      cached: false,
-    };
+    const result = await downloadVideo(cleanUrl);
 
+    // If we reach here, it's successful (tikwm.js returns {success: true})
+    const payload = { ...result, cached: false };
     await setToCache(cacheKey, payload, config.cache.ttl);
 
-    return res.status(200).json(payload);
+    logEvent('INFO', 'API_INFO', 'Success', { ip, url: cleanUrl });
+    return res.status(200).json({ code: 0, data: payload });
+
   } catch (err) {
-    return res.status(502).json({
-      success: false,
-      message: 'Failed to fetch video info.',
-      error: err.message,
-    });
+    let errorCode = 'SERVER_ERROR';
+    let statusCode = 500;
+    let message = err.message || 'Internal Server Error';
+
+    if (err.message === 'PRIVATE_VIDEO' || err.message === 'DELETED_VIDEO') {
+      errorCode = err.message;
+      statusCode = 403; // or 404
+    } else if (err.name === 'AbortError') {
+      errorCode = 'TIMEOUT';
+      statusCode = 504;
+      message = 'Request timed out.';
+    }
+
+    logEvent('ERROR', 'API_INFO', 'Request Failed', { ip, url: cleanUrl, errorCode, error: err.message });
+    return res.status(statusCode).json({ code: errorCode, msg: message });
   }
 }

@@ -1,7 +1,9 @@
 import { useState } from "react";
 import { Mail, Send, CheckCircle2, User, MessageSquare, AlertCircle } from "lucide-react";
+import { useLanguage } from "../contexts/LanguageContext";
 
 export default function Contact() {
+  const { t } = useLanguage();
   const [status, setStatus] = useState<"idle" | "sending" | "success" | "error">("idle");
   const [formData, setFormData] = useState({
     name: "",
@@ -27,9 +29,9 @@ export default function Contact() {
         {/* Contact Info */}
         <div className="md:col-span-2 space-y-6">
           <div className="bg-white/80 dark:bg-slate-900/80 backdrop-blur-xl p-8 rounded-3xl border border-slate-200/50 dark:border-slate-800/50 shadow-xl">
-            <h1 className="text-3xl font-bold text-slate-900 dark:text-white mb-4">Get in Touch</h1>
+            <h1 className="text-3xl font-bold text-slate-900 dark:text-white mb-4">{t('contactTitle')}</h1>
             <p className="text-slate-600 dark:text-slate-300 mb-8 leading-relaxed">
-              Have a question or need technical support? Our team is here to help you 24/7.
+              {t('contactDesc')}
             </p>
             
             <div className="space-y-6">
@@ -38,7 +40,7 @@ export default function Contact() {
                   <Mail className="w-6 h-6 text-cyan-500" />
                 </div>
                 <div>
-                  <h3 className="font-bold text-slate-900 dark:text-white">Email Us</h3>
+                  <h3 className="font-bold text-slate-900 dark:text-white">{t('emailUs')}</h3>
                   <p className="text-slate-500 dark:text-slate-400">support@savepro.site</p>
                 </div>
               </div>
@@ -55,15 +57,15 @@ export default function Contact() {
                 <div className="w-20 h-20 bg-green-500/10 rounded-full flex items-center justify-center mb-6">
                   <CheckCircle2 className="w-12 h-12 text-green-500" />
                 </div>
-                <h2 className="text-2xl font-bold text-slate-900 dark:text-white mb-2">Message Sent!</h2>
+                <h2 className="text-2xl font-bold text-slate-900 dark:text-white mb-2">{t('messageSent')}</h2>
                 <p className="text-slate-600 dark:text-slate-300 mb-6">
-                  Thank you for reaching out. We will get back to you within 24 hours.
+                  {t('messageSentDesc')}
                 </p>
                 <button 
                   onClick={() => setStatus("idle")}
                   className="px-6 py-2 bg-slate-900 dark:bg-white text-white dark:text-slate-900 rounded-full font-bold hover:scale-105 transition-transform"
                 >
-                  Send Another
+                  {t('sendAnother')}
                 </button>
               </div>
             )}
@@ -72,7 +74,7 @@ export default function Contact() {
               <div className="grid grid-cols-2 gap-4">
                 <div className="space-y-2 col-span-2 sm:col-span-1">
                   <label className="text-sm font-bold text-slate-700 dark:text-slate-300 flex items-center gap-2">
-                    <User className="w-4 h-4" /> Full Name
+                    <User className="w-4 h-4" /> {t('fullName')}
                   </label>
                   <input
                     required
@@ -85,7 +87,7 @@ export default function Contact() {
                 </div>
                 <div className="space-y-2 col-span-2 sm:col-span-1">
                   <label className="text-sm font-bold text-slate-700 dark:text-slate-300 flex items-center gap-2">
-                    <Mail className="w-4 h-4" /> Email Address
+                    <Mail className="w-4 h-4" /> {t('emailAddress')}
                   </label>
                   <input
                     required
@@ -100,7 +102,7 @@ export default function Contact() {
 
               <div className="space-y-2">
                 <label className="text-sm font-bold text-slate-700 dark:text-slate-300 flex items-center gap-2">
-                  <AlertCircle className="w-4 h-4" /> Subject
+                  <AlertCircle className="w-4 h-4" /> {t('subject')}
                 </label>
                 <input
                   required
@@ -114,7 +116,7 @@ export default function Contact() {
 
               <div className="space-y-2">
                 <label className="text-sm font-bold text-slate-700 dark:text-slate-300 flex items-center gap-2">
-                  <MessageSquare className="w-4 h-4" /> Message
+                  <MessageSquare className="w-4 h-4" /> {t('message')}
                 </label>
                 <textarea
                   required
@@ -136,7 +138,7 @@ export default function Contact() {
                 ) : (
                   <>
                     <Send className="w-5 h-5" />
-                    Send Message
+                    {t('sendMessage')}
                   </>
                 )}
               </button>
@@ -147,3 +149,4 @@ export default function Contact() {
     </div>
   );
 }
+
