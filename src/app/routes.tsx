@@ -3,6 +3,7 @@ import { lazy, Suspense } from "react";
 import Header from "./components/Header";
 import Footer from "./components/Footer";
 import { Toaster } from "./components/ui/sonner";
+import { useLanguage } from "./app/contexts/LanguageContext";
 
 const Home = lazy(() => import("./pages/Home"));
 const PrivacyPolicy = lazy(() => import("./pages/PrivacyPolicy"));
@@ -13,8 +14,9 @@ const AboutUs = lazy(() => import("./pages/AboutUs"));
 const Disclaimer = lazy(() => import("./pages/Disclaimer"));
 
 function Root() {
+  const { language } = useLanguage();
   return (
-    <div dir="ltr" className="min-h-screen flex flex-col bg-slate-50 dark:bg-slate-950 text-slate-900 dark:text-slate-50" style={{ fontFamily: 'Tajawal, sans-serif' }}>
+    <div dir={language === 'ar' ? 'rtl' : 'ltr'} className="min-h-screen flex flex-col bg-slate-50 dark:bg-slate-950 text-slate-900 dark:text-slate-50" style={{ fontFamily: 'Tajawal, sans-serif' }}>
       <Header />
       <main className="flex-1 flex flex-col">
         <Suspense fallback={<div className="flex justify-center items-center h-64">Loading...</div>}>

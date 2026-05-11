@@ -29,7 +29,7 @@ export default function TermsOfService() {
               <Scale className="w-6 h-6 text-cyan-500" />
               <h2 className="text-2xl font-bold text-slate-900 dark:text-white">{t('termsSec1Title')}</h2>
             </div>
-            <p>{t('termsSec1Content')}</p>
+            <p dangerouslySetInnerHTML={{ __html: t('termsSec1Content') }} />
           </section>
 
           <section className="space-y-6">
@@ -37,7 +37,7 @@ export default function TermsOfService() {
               <ShieldAlert className="w-6 h-6 text-amber-500" />
               <h2 className="text-2xl font-bold text-slate-900 dark:text-white">{t('termsSec2Title')}</h2>
             </div>
-            <p>{t('termsSec2Content')}</p>
+            <p dangerouslySetInnerHTML={{ __html: t('termsSec2Content') }} />
           </section>
 
           <section className="space-y-6">
@@ -45,7 +45,7 @@ export default function TermsOfService() {
               <AlertTriangle className="w-6 h-6 text-purple-500" />
               <h2 className="text-2xl font-bold text-slate-900 dark:text-white">{t('termsSec3Title')}</h2>
             </div>
-            <p>{t('termsSec3Content')}</p>
+            <p dangerouslySetInnerHTML={{ __html: t('termsSec3Content') }} />
           </section>
 
           <section className="space-y-6">
@@ -53,7 +53,7 @@ export default function TermsOfService() {
               <Scale className="w-6 h-6 text-blue-500" />
               <h2 className="text-2xl font-bold text-slate-900 dark:text-white">{t('termsSec4Title')}</h2>
             </div>
-            <p>{t('termsSec4Content')}</p>
+            <p dangerouslySetInnerHTML={{ __html: t('termsSec4Content') }} />
           </section>
 
           <section className="space-y-6">
@@ -61,7 +61,7 @@ export default function TermsOfService() {
               <Info className="w-6 h-6 text-green-500" />
               <h2 className="text-2xl font-bold text-slate-900 dark:text-white">{t('termsSec5Title')}</h2>
             </div>
-            <p>{t('termsSec5Content')}</p>
+            <p dangerouslySetInnerHTML={{ __html: t('termsSec5Content') }} />
           </section>
 
           <div className="mt-12 p-8 bg-gradient-to-br from-purple-500/10 to-cyan-500/10 rounded-2xl border border-purple-500/20 dark:border-cyan-500/20 shadow-lg text-center">

@@ -18,7 +18,7 @@ const API_DOWNLOAD = '/api/download';
 type DownloadState = 'idle' | 'processing' | 'downloading';
 
 export default function Home() {
-  const { t } = useLanguage();
+  const { language, t } = useLanguage();
   const navigate = useNavigate();
   const [history, setHistory] = useState<any[]>([]);
   const [showHistory, setShowHistory] = useState(true);
@@ -108,9 +108,10 @@ export default function Home() {
   };
 
   return (
-    <div dir="ltr" className="flex flex-col w-full">
+    <div dir={language === 'ar' ? 'rtl' : 'ltr'} className="flex flex-col w-full">
       <SEO 
-        description="Download TikTok videos without watermark for free. Fast, easy, and secure TikTok video downloader."
+        title={t('seoTitle')}
+        description={t('seoDescription')}
       />
       {/* Hero Section */}
       <section className="relative overflow-hidden bg-slate-50 dark:bg-slate-950 py-16 md:py-24 border-b border-slate-200 dark:border-slate-800 transition-colors">
@@ -250,6 +251,52 @@ export default function Home() {
         </div>
       </section>
 
+      {/* Detailed SEO Guide Section */}
+      <section className="py-16 md:py-24 bg-slate-50 dark:bg-slate-950 transition-colors">
+        <div className="container mx-auto px-4 max-w-4xl">
+          <div className="bg-white dark:bg-slate-900 rounded-3xl p-8 md:p-12 shadow-sm border border-slate-200 dark:border-slate-800">
+            <h2 className="text-3xl font-bold text-slate-900 dark:text-white mb-6">
+              {t('guideTitle')}
+            </h2>
+            <p className="text-lg text-slate-600 dark:text-slate-300 mb-10 leading-relaxed">
+              {t('guideIntro')}
+            </p>
+            
+            <div className="space-y-10">
+              <div className="flex gap-6">
+                <div className="w-10 h-10 rounded-full bg-cyan-500/10 flex items-center justify-center shrink-0">
+                  <span className="font-bold text-cyan-600">1</span>
+                </div>
+                <div>
+                  <h3 className="text-xl font-bold text-slate-900 dark:text-white mb-3">{t('guideStep1Title')}</h3>
+                  <p className="text-slate-600 dark:text-slate-300 leading-relaxed">{t('guideStep1Desc')}</p>
+                </div>
+              </div>
+              
+              <div className="flex gap-6">
+                <div className="w-10 h-10 rounded-full bg-purple-500/10 flex items-center justify-center shrink-0">
+                  <span className="font-bold text-purple-600">2</span>
+                </div>
+                <div>
+                  <h3 className="text-xl font-bold text-slate-900 dark:text-white mb-3">{t('guideStep2Title')}</h3>
+                  <p className="text-slate-600 dark:text-slate-300 leading-relaxed">{t('guideStep2Desc')}</p>
+                </div>
+              </div>
+              
+              <div className="flex gap-6">
+                <div className="w-10 h-10 rounded-full bg-cyan-500/10 flex items-center justify-center shrink-0">
+                  <span className="font-bold text-cyan-600">3</span>
+                </div>
+                <div>
+                  <h3 className="text-xl font-bold text-slate-900 dark:text-white mb-3">{t('guideStep3Title')}</h3>
+                  <p className="text-slate-600 dark:text-slate-300 leading-relaxed">{t('guideStep3Desc')}</p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
       {/* FAQ Section */}
       <section id="faq" className="py-16 md:py-24 bg-slate-50 dark:bg-slate-900 transition-colors scroll-mt-20">
         <div className="container mx-auto px-4">
@@ -276,15 +323,15 @@ function FaqItem({ question, answer }: { question: string; answer: string }) {
   return (
     <div className="bg-white dark:bg-slate-800 rounded-2xl border border-slate-200 dark:border-slate-700 overflow-hidden transition-colors">
       <button
-        className="w-full px-6 py-4 flex items-center justify-between hover:bg-slate-50 dark:hover:bg-slate-700/50 transition-colors text-right"
+        className="w-full px-6 py-4 flex items-center justify-between hover:bg-slate-50 dark:hover:bg-slate-700/50 transition-colors text-start"
         onClick={() => setIsOpen(!isOpen)}
       >
-        <span className="font-bold text-slate-900 dark:text-white text-lg pr-2">{question}</span>
+        <span className="font-bold text-slate-900 dark:text-white text-lg pe-2">{question}</span>
         <ChevronDown className={`w-5 h-5 text-slate-400 dark:text-slate-500 transition-transform flex-shrink-0 ${isOpen ? 'rotate-180' : ''}`} />
       </button>
 
       {isOpen && (
-        <div className="px-6 py-4 bg-slate-50 dark:bg-slate-700/30 border-t border-slate-100 dark:border-slate-700 text-slate-600 dark:text-slate-300 leading-relaxed pr-8">
+        <div className="px-6 py-4 bg-slate-50 dark:bg-slate-700/30 border-t border-slate-100 dark:border-slate-700 text-slate-600 dark:text-slate-300 leading-relaxed ps-8">
           {answer}
         </div>
       )}

@@ -3,13 +3,13 @@ import { ShieldCheck, Mail, Info, ExternalLink, Download, Globe, Github } from "
 import { useLanguage } from "../contexts/LanguageContext";
 
 export default function Footer() {
-  const { t } = useLanguage();
+  const { language, t } = useLanguage();
   const handleScrollToTop = () => {
     window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
   return (
-    <footer dir="ltr" className="relative z-10 bg-white/40 dark:bg-slate-950/40 backdrop-blur-xl border-t border-slate-200/50 dark:border-slate-800/50 mt-auto py-16 transition-all overflow-hidden">
+    <footer dir={language === 'ar' ? 'rtl' : 'ltr'} className="relative z-10 bg-white/40 dark:bg-slate-950/40 backdrop-blur-xl border-t border-slate-200/50 dark:border-slate-800/50 mt-auto py-16 transition-all overflow-hidden">
       {/* Decorative background elements */}
       <div className="absolute top-0 left-1/4 w-64 h-64 bg-cyan-500/5 rounded-full blur-3xl -z-10"></div>
       <div className="absolute bottom-0 right-1/4 w-96 h-96 bg-purple-500/5 rounded-full blur-3xl -z-10"></div>

@@ -1,15 +1,17 @@
 import { Toaster as Sonner, ToasterProps } from "sonner";
 import { useTheme } from "../ThemeProvider";
+import { useLanguage } from "../../contexts/LanguageContext";
 
 const Toaster = ({ ...props }: ToasterProps) => {
   const { theme = "light" } = useTheme();
+  const { language } = useLanguage();
 
   return (
     <Sonner
       theme={theme as ToasterProps["theme"]}
       className="toaster group"
       position="top-center"
-      dir="ltr"
+      dir={language === 'ar' ? 'rtl' : 'ltr'}
       style={
         {
           "--normal-bg": "var(--popover)",

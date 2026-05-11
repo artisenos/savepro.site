@@ -28,7 +28,7 @@ export default function PrivacyPolicy() {
               <Shield className="w-6 h-6 text-cyan-500" />
               <h2 className="text-2xl font-bold text-slate-900 dark:text-white">{t('privacySec1Title')}</h2>
             </div>
-            <p>{t('privacySec1Content')}</p>
+            <p dangerouslySetInnerHTML={{ __html: t('privacySec1Content') }} />
           </section>
 
           <section className="space-y-4">
@@ -36,7 +36,7 @@ export default function PrivacyPolicy() {
               <Database className="w-6 h-6 text-purple-500" />
               <h2 className="text-2xl font-bold text-slate-900 dark:text-white">{t('privacySec2Title')}</h2>
             </div>
-            <p>{t('privacySec2Content')}</p>
+            <p dangerouslySetInnerHTML={{ __html: t('privacySec2Content') }} />
           </section>
 
           <section className="space-y-4">
@@ -44,7 +44,7 @@ export default function PrivacyPolicy() {
               <Lock className="w-6 h-6 text-cyan-500" />
               <h2 className="text-2xl font-bold text-slate-900 dark:text-white">{t('privacySec3Title')}</h2>
             </div>
-            <p>{t('privacySec3Content')}</p>
+            <p dangerouslySetInnerHTML={{ __html: t('privacySec3Content') }} />
           </section>
 
           <section className="space-y-4">
@@ -52,7 +52,7 @@ export default function PrivacyPolicy() {
               <Globe className="w-6 h-6 text-purple-500" />
               <h2 className="text-2xl font-bold text-slate-900 dark:text-white">{t('privacySec4Title')}</h2>
             </div>
-            <p>{t('privacySec4Content')}</p>
+            <p dangerouslySetInnerHTML={{ __html: t('privacySec4Content') }} />
           </section>
 
           <section className="space-y-4">
@@ -60,7 +60,7 @@ export default function PrivacyPolicy() {
               <Eye className="w-6 h-6 text-cyan-500" />
               <h2 className="text-2xl font-bold text-slate-900 dark:text-white">{t('privacySec5Title')}</h2>
             </div>
-            <p>{t('privacySec5Content')}</p>
+            <p dangerouslySetInnerHTML={{ __html: t('privacySec5Content') }} />
           </section>
 
           <section className="space-y-4">
@@ -68,17 +68,19 @@ export default function PrivacyPolicy() {
               <UserCheck className="w-6 h-6 text-purple-500" />
               <h2 className="text-2xl font-bold text-slate-900 dark:text-white">{t('privacySec6Title')}</h2>
             </div>
-            <p>{t('privacySec6Content')}</p>
+            <p dangerouslySetInnerHTML={{ __html: t('privacySec6Content') }} />
           </section>
 
           <div className="mt-12 p-8 bg-gradient-to-br from-cyan-500/10 to-purple-500/10 rounded-2xl border border-cyan-500/20 dark:border-purple-500/20 shadow-lg">
-            <h3 className="text-2xl font-bold text-slate-900 dark:text-white mb-4">{t('privacyContactTitle')}</h3>
-            <p className="mb-4">
-              {t('privacyContactContent')}
-            </p>
-            <a href="mailto:support@savepro.site" className="text-xl font-bold text-cyan-600 dark:text-cyan-400 hover:text-purple-500 transition-colors underline decoration-2 underline-offset-4">
-              support@savepro.site
-            </a>
+            <div className="flex flex-col md:flex-row items-center justify-between gap-6">
+              <div className="text-start md:text-start">
+                <h3 className="text-xl font-bold text-slate-900 dark:text-white mb-2">{t('privacyContactTitle')}</h3>
+                <p className="text-slate-600 dark:text-slate-300">contact@savepro.site</p>
+              </div>
+              <a href="mailto:support@savepro.site" className="text-xl font-bold text-cyan-600 dark:text-cyan-400 hover:text-purple-500 transition-colors underline decoration-2 underline-offset-4">
+                support@savepro.site
+              </a>
+            </div>
           </div>
         </div>
       </div>

@@ -16,7 +16,7 @@ const API_INFO = '/api/info';
 const API_DOWNLOAD = '/api/download';
 
 export default function DownloadForm() {
-  const { t } = useLanguage();
+  const { language, t } = useLanguage();
   const [url, setUrl] = useState('');
   const [loading, setLoading] = useState(false);
   const [videoData, setVideoData] = useState<VideoData | null>(null);
@@ -249,7 +249,7 @@ export default function DownloadForm() {
   };
 
   return (
-    <div dir="ltr" className="w-full max-w-3xl mx-auto flex flex-col items-center z-20 relative">
+    <div dir={language === 'ar' ? 'rtl' : 'ltr'} className="w-full max-w-3xl mx-auto flex flex-col items-center z-20 relative">
       <form
         onSubmit={handleSubmit} 
         className="w-full bg-white/70 dark:bg-slate-900/70 backdrop-blur-xl p-2 rounded-2xl shadow-[0_8px_30px_rgb(0,0,0,0.12)] dark:shadow-[0_8px_30px_rgba(0,255,255,0.1)] border border-white/20 dark:border-cyan-500/20 flex flex-col md:flex-row gap-2 relative overflow-hidden"
@@ -346,14 +346,21 @@ export default function DownloadForm() {
                       </button>
                       
                       {videoProgress > 0 && (
-                        <div className="w-full mt-2 animate-in fade-in slide-in-from-top-1 px-1">
-                          <div className="flex justify-between mb-1">
-                            <span className="text-[10px] font-bold text-savepro-primary">{Math.round(videoProgress)}%</span>
-                            <span className="text-[10px] font-medium text-slate-500 dark:text-cyan-400">{t('processing')}...</span>
+                        <div className="w-full mt-4 animate-in fade-in zoom-in duration-300">
+                          <div className="flex justify-between items-end mb-2 px-1">
+                            <span className="text-sm font-medium text-slate-500/80 dark:text-cyan-400/60 flex items-center gap-1.5">
+                              {t('processing')}
+                              <span className="flex gap-0.5 mb-1">
+                                <span className="w-1 h-1 bg-current rounded-full animate-bounce [animation-delay:-0.3s]"></span>
+                                <span className="w-1 h-1 bg-current rounded-full animate-bounce [animation-delay:-0.15s]"></span>
+                                <span className="w-1 h-1 bg-current rounded-full animate-bounce"></span>
+                              </span>
+                            </span>
+                            <span className="text-lg font-black text-cyan-600 dark:text-cyan-400 drop-shadow-sm leading-none">{Math.round(videoProgress)}%</span>
                           </div>
-                          <div className="w-full bg-slate-200 dark:bg-slate-800 rounded-full h-1.5 overflow-hidden">
+                          <div className="w-full bg-gray-100/10 dark:bg-slate-800/40 backdrop-blur-sm border border-white/10 dark:border-cyan-500/10 rounded-full h-5 overflow-hidden p-1 shadow-inner">
                             <div 
-                              className="bg-savepro-primary h-full rounded-full transition-all duration-300 ease-out" 
+                              className="h-full rounded-full bg-gradient-to-r from-cyan-400 to-blue-600 transition-all duration-300 ease-out shadow-[0_0_15px_rgba(6,182,212,0.5)] animate-pulse" 
                               style={{ width: `${videoProgress}%` }}
                             />
                           </div>
@@ -381,14 +388,21 @@ export default function DownloadForm() {
                           </button>
 
                           {musicProgress > 0 && (
-                            <div className="w-full mt-2 animate-in fade-in slide-in-from-top-1 px-1">
-                              <div className="flex justify-between mb-1">
-                                <span className="text-[10px] font-bold text-savepro-primary">{Math.round(musicProgress)}%</span>
-                                <span className="text-[10px] font-medium text-slate-500 dark:text-cyan-400">{t('processing')}...</span>
+                            <div className="w-full mt-4 animate-in fade-in zoom-in duration-300">
+                              <div className="flex justify-between items-end mb-2 px-1">
+                                <span className="text-sm font-medium text-slate-500/80 dark:text-cyan-400/60 flex items-center gap-1.5">
+                                  {t('processing')}
+                                  <span className="flex gap-0.5 mb-1">
+                                    <span className="w-1 h-1 bg-current rounded-full animate-bounce [animation-delay:-0.3s]"></span>
+                                    <span className="w-1 h-1 bg-current rounded-full animate-bounce [animation-delay:-0.15s]"></span>
+                                    <span className="w-1 h-1 bg-current rounded-full animate-bounce"></span>
+                                  </span>
+                                </span>
+                                <span className="text-lg font-black text-cyan-600 dark:text-cyan-400 drop-shadow-sm leading-none">{Math.round(musicProgress)}%</span>
                               </div>
-                              <div className="w-full bg-slate-200 dark:bg-slate-800 rounded-full h-1.5 overflow-hidden">
+                              <div className="w-full bg-gray-100/10 dark:bg-slate-800/40 backdrop-blur-sm border border-white/10 dark:border-cyan-500/10 rounded-full h-5 overflow-hidden p-1 shadow-inner">
                                 <div 
-                                  className="bg-savepro-primary h-full rounded-full transition-all duration-300 ease-out" 
+                                  className="h-full rounded-full bg-gradient-to-r from-cyan-400 to-blue-600 transition-all duration-300 ease-out shadow-[0_0_15px_rgba(6,182,212,0.5)] animate-pulse" 
                                   style={{ width: `${musicProgress}%` }}
                                 />
                               </div>

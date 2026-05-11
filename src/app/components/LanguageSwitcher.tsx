@@ -46,20 +46,20 @@ export default function LanguageSwitcher() {
             animate={{ opacity: 1, y: 0, scale: 1 }}
             exit={{ opacity: 0, y: 10, scale: 0.95 }}
             transition={{ duration: 0.2, ease: "easeOut" }}
-            className="absolute right-0 mt-3 w-48 rounded-2xl bg-white/80 dark:bg-slate-900/80 backdrop-blur-xl border border-slate-200/50 dark:border-slate-700/50 shadow-[0_8px_30px_rgb(0,0,0,0.12)] overflow-hidden"
+            className="absolute end-0 mt-3 w-48 rounded-2xl bg-white/80 dark:bg-slate-900/80 backdrop-blur-xl border border-slate-200/50 dark:border-slate-700/50 shadow-[0_8px_30px_rgb(0,0,0,0.12)] overflow-hidden"
           >
             <div className="py-2 max-h-[300px] overflow-y-auto custom-scrollbar">
               {languages.map((lang) => (
                 <motion.button
                   key={lang.code}
-                  whileHover={{ x: 5, backgroundColor: "rgba(0,0,0,0.05)" }}
+                  whileHover={{ x: language === 'ar' ? -5 : 5, backgroundColor: "rgba(0,0,0,0.05)" }}
                   onClick={() => {
                     setLanguage(lang.code);
                     setIsOpen(false);
                   }}
-                  className={`w-full flex items-center gap-3 px-4 py-2.5 text-left text-sm transition-colors ${
+                  className={`w-full flex items-center gap-3 px-4 py-2.5 text-start text-sm transition-colors ${
                     language === lang.code 
-                      ? 'bg-blue-50 dark:bg-cyan-900/30 text-blue-600 dark:text-cyan-400 font-bold border-l-4 border-blue-500 dark:border-cyan-400' 
+                      ? 'bg-blue-50 dark:bg-cyan-900/30 text-blue-600 dark:text-cyan-400 font-bold border-s-4 border-blue-500 dark:border-cyan-400' 
                       : 'text-slate-700 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white'
                   }`}
                 >
