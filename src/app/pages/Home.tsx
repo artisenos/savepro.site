@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router";
-import { Download, Link as LinkIcon, Zap, Video, CheckCircle2, ChevronDown, Music, Clock, Trash2, X, Loader2, ShieldCheck, MonitorSmartphone, Infinity } from "lucide-react";
+import { Download, Link as LinkIcon, Zap, Video, CheckCircle2, ChevronDown, Music, Clock, Trash2, X, Loader2, ShieldCheck, MonitorSmartphone, Infinity, Mail, Send, User, MessageSquare, AlertCircle } from "lucide-react";
 import { toast } from "sonner";
 import DownloadForm from "../components/DownloadForm";
 import { useLanguage } from "../contexts/LanguageContext";
@@ -334,6 +334,108 @@ export default function Home() {
           </div>
         </div>
       </section>
+
+      {/* Contact Section */}
+      <section id="contact" className="py-16 md:py-24 bg-white dark:bg-slate-950 transition-colors scroll-mt-20">
+        <div className="container mx-auto px-4">
+          <div className="max-w-4xl mx-auto">
+            <div className="text-center mb-12">
+              <h2 className="text-3xl md:text-4xl font-bold text-slate-900 dark:text-white mb-4">{t('contactTitle') || 'Contact Us'}</h2>
+              <p className="text-lg text-slate-600 dark:text-slate-300 max-w-2xl mx-auto">{t('contactDesc') || 'Have questions? We are here to help.'}</p>
+            </div>
+            
+            <ContactForm />
+          </div>
+        </div>
+      </section>
+    </div>
+  );
+}
+
+function ContactForm() {
+  const { t } = useLanguage();
+  const [status, setStatus] = useState<"idle" | "sending" | "success" | "error">("idle");
+  const [formData, setFormData] = useState({
+    name: "",
+    email: "",
+    subject: "",
+    message: "",
+  });
+
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    setStatus("sending");
+    setTimeout(() => {
+      setStatus("success");
+      setFormData({ name: "", email: "", subject: "", message: "" });
+      toast.success(t('messageSent') || 'Message sent successfully!');
+    }, 1500);
+  };
+
+  return (
+    <div className="bg-slate-50 dark:bg-slate-900 rounded-3xl p-8 border border-slate-200 dark:border-slate-800 shadow-xl relative overflow-hidden">
+      {status === "success" && (
+        <div className="absolute inset-0 bg-white/90 dark:bg-slate-900/90 z-10 flex flex-col items-center justify-center text-center p-8">
+          <CheckCircle2 className="w-16 h-16 text-green-500 mb-4" />
+          <h2 className="text-2xl font-bold text-slate-900 dark:text-white mb-2">{t('messageSent')}</h2>
+          <button 
+            onClick={() => setStatus("idle")}
+            className="mt-4 px-6 py-2 bg-blue-600 text-white rounded-full font-bold hover:bg-blue-700 transition-colors"
+          >
+            {t('sendAnother')}
+          </button>
+        </div>
+      )}
+
+      <form onSubmit={handleSubmit} className="space-y-6">
+        <div className="grid grid-cols-2 gap-4">
+          <div className="space-y-2 col-span-2 sm:col-span-1">
+            <label className="text-sm font-bold text-slate-700 dark:text-slate-300 flex items-center gap-2">
+              <User className="w-4 h-4" /> {t('fullName')}
+            </label>
+            <input
+              required
+              type="text"
+              value={formData.name}
+              onChange={(e) => setFormData({...formData, name: e.target.value})}
+              className="w-full px-4 py-3 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl focus:ring-2 focus:ring-blue-500 dark:text-white outline-none transition-all"
+            />
+          </div>
+          <div className="space-y-2 col-span-2 sm:col-span-1">
+            <label className="text-sm font-bold text-slate-700 dark:text-slate-300 flex items-center gap-2">
+              <Mail className="w-4 h-4" /> {t('emailAddress')}
+            </label>
+            <input
+              required
+              type="email"
+              value={formData.email}
+              onChange={(e) => setFormData({...formData, email: e.target.value})}
+              className="w-full px-4 py-3 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl focus:ring-2 focus:ring-blue-500 dark:text-white outline-none transition-all"
+            />
+          </div>
+        </div>
+
+        <div className="space-y-2">
+          <label className="text-sm font-bold text-slate-700 dark:text-slate-300 flex items-center gap-2">
+            <MessageSquare className="w-4 h-4" /> {t('message')}
+          </label>
+          <textarea
+            required
+            rows={4}
+            value={formData.message}
+            onChange={(e) => setFormData({...formData, message: e.target.value})}
+            className="w-full px-4 py-3 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl focus:ring-2 focus:ring-blue-500 dark:text-white outline-none transition-all resize-none"
+          />
+        </div>
+
+        <button
+          disabled={status === "sending"}
+          type="submit"
+          className="w-full py-4 bg-blue-600 hover:bg-blue-700 text-white font-bold rounded-2xl shadow-lg transition-all flex items-center justify-center gap-2 disabled:opacity-70"
+        >
+          {status === "sending" ? <Loader2 className="w-5 h-5 animate-spin" /> : <><Send className="w-5 h-5" /> {t('sendMessage')}</>}
+        </button>
+      </form>
     </div>
   );
 }

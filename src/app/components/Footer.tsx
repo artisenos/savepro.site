@@ -45,9 +45,9 @@ export default function Footer() {
             </h3>
             <ul className="space-y-4 text-slate-600 dark:text-slate-300">
               <li><Link to="/" onClick={handleScrollToTop} className="hover:text-cyan-500 transition-colors flex items-center gap-2">{t('home')}</Link></li>
-              <li><a href="#features" className="hover:text-cyan-500 transition-colors flex items-center gap-2">{t('features')}</a></li>
-              <li><a href="#how-to-use" className="hover:text-cyan-500 transition-colors flex items-center gap-2">{t('howToUse')}</a></li>
-              <li><a href="#faq" className="hover:text-cyan-500 transition-colors flex items-center gap-2">{t('faq')}</a></li>
+              <li><Link to="/#features" className="hover:text-cyan-500 transition-colors flex items-center gap-2">{t('features')}</Link></li>
+              <li><Link to="/#how-to-use" className="hover:text-cyan-500 transition-colors flex items-center gap-2">{t('howToUse')}</Link></li>
+              <li><Link to="/#faq" className="hover:text-cyan-500 transition-colors flex items-center gap-2">{t('faq')}</Link></li>
               <li><Link to="/about-us" onClick={handleScrollToTop} className="hover:text-cyan-500 transition-colors flex items-center gap-2">{t('aboutUsTitle')}</Link></li>
             </ul>
           </div>

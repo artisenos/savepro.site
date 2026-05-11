@@ -26,7 +26,7 @@ export default function Header() {
           <Link to="/#features" className="text-sm font-bold text-slate-600 dark:text-slate-300 hover:text-cyan-500 dark:hover:text-cyan-400 transition-colors uppercase tracking-wider">{t('features')}</Link>
           <Link to="/#how-to-use" className="text-sm font-bold text-slate-600 dark:text-slate-300 hover:text-cyan-500 dark:hover:text-cyan-400 transition-colors uppercase tracking-wider">{t('howToUse')}</Link>
           <Link to="/#faq" className="text-sm font-bold text-slate-600 dark:text-slate-300 hover:text-cyan-500 dark:hover:text-cyan-400 transition-colors uppercase tracking-wider">{t('faq')}</Link>
-          <Link to="/contact" className="text-sm font-bold text-slate-600 dark:text-slate-300 hover:text-cyan-500 dark:hover:text-cyan-400 transition-colors uppercase tracking-wider">{t('contact') || 'Contact'}</Link>
+          <Link to="/#contact" className="text-sm font-bold text-slate-600 dark:text-slate-300 hover:text-cyan-500 dark:hover:text-cyan-400 transition-colors uppercase tracking-wider">{t('contact') || (language === 'ar' ? 'اتصل بنا' : 'Contact')}</Link>
         </nav>
         <div className="flex items-center gap-4">
           <LanguageSwitcher />
