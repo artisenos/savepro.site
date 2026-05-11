@@ -1,16 +1,28 @@
-import { defineConfig } from 'vite'
-import path from 'path'
+import { defineConfig, normalizePath, type Plugin } from 'vite'
+import path from 'node:path'
 import tailwindcss from '@tailwindcss/vite'
 import react from '@vitejs/plugin-react'
+import { fileURLToPath } from 'node:url'
+
+const __dirname = path.dirname(fileURLToPath(import.meta.url))
 
 
-function figmaAssetResolver() {
+
+function figmaAssetResolver(): Plugin {
   return {
     name: 'figma-asset-resolver',
-    resolveId(id) {
-      if (id.startsWith('figma:asset/')) {
-        const filename = id.replace('figma:asset/', '')
-        return path.resolve(__dirname, 'src/assets', filename)
+    resolveId(source) {
+      if (!source.startsWith('figma:asset/')) return null
+      
+      const protocol = 'figma:asset/'
+      const [filePath, ...rest] = source.slice(protocol.length).split(/([?#])/)
+      const query = rest.join('')
+      
+      if (filePath.includes('..')) return null
+      
+      return {
+        id: normalizePath(path.resolve(__dirname, 'src/assets', filePath)) + query,
+        moduleSideEffects: false
       }
     },
   }
@@ -34,9 +46,15 @@ export default defineConfig({
     minify: 'esbuild',
     rollupOptions: {
       output: {
-        manualChunks: {
-          vendor: ['react', 'react-dom'],
-          motion: ['framer-motion'],
+        manualChunks(id) {
+          if (id.includes('node_modules')) {
+            if (id.includes('react') || id.includes('react-dom')) {
+              return 'vendor';
+            }
+            if (id.includes('framer-motion')) {
+              return 'motion';
+            }
+          }
         },
       },
     },
