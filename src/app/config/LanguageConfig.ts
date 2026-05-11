@@ -317,7 +317,6 @@ export const translations: Record<LanguageCode, Record<string, string>> = {
     downloadTimeout: 'Download timed out. Please try again.',
     downloadingVideoAria: 'Downloading video...',
     downloadingMusicAria: 'Downloading music...',
-    aboutUsTitle: 'About Us',
     aboutUsStory: 'Our Story',
     aboutUsStoryContent: 'SavePro was born out of a desire to create the most efficient, privacy-focused media tool on the web. Our team is dedicated to technical excellence and user empowerment.',
     aboutUsMission: 'Our Mission',

@@ -28,7 +28,7 @@ export default function DownloadForm() {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!url) {
-      toast.error(t('emptyInputError'), { id: 'empty-input', dir: 'ltr' });
+      toast.error(t('emptyInputError'), { id: 'empty-input' });
       return;
     }
 
@@ -117,20 +117,24 @@ export default function DownloadForm() {
       }
 
       setVideoData(parsedData);
-      toast.success(t('successMsg'), { id: 'api-success', dir: 'ltr' });
+      toast.success(t('successMsg'), { id: 'api-success' });
       setUrl('');
 
     } catch (err: any) {
+      const errorMsg = err instanceof Error ? err.message : String(err);
+      
       if (err.name === 'AbortError') {
         console.error('[API] Request timed out after 15s');
-        toast.error(t('rateLimitError'), { id: toastId, dir: 'ltr' });
+        toast.error(t('downloadTimeout'), { id: toastId });
       } else if (err.name === 'TypeError') {
-        console.error('[API] Network error:', err.message);
-        toast.error(t('serverError'), { id: toastId, dir: 'ltr' });
+        console.error('[API] Network error:', errorMsg);
+        toast.error(t('serverError'), { id: toastId });
       } else {
-        toast.error(err.message || t('serverError'), { id: toastId, dir: 'ltr' });
+        // Handle API-level errors or unknown errors
+        toast.error(errorMsg || t('serverError'), { id: toastId });
       }
-      console.error('[API] handleSubmit error:', err);
+      
+      if (import.meta.env.DEV) console.error('[API] handleSubmit error:', err);
     } finally {
       setLoading(false);
     }
@@ -138,9 +142,11 @@ export default function DownloadForm() {
 
   const handleDownload = async (mediaUrl: string, type: 'video' | 'music') => {
     if (!mediaUrl) {
-      toast.error(t(type === 'video' ? 'videoNotAvailable' : 'musicNotAvailable'), { id: 'dl-no-url', dir: 'ltr' });
+      toast.error(t(type === 'video' ? 'videoNotAvailable' : 'musicNotAvailable'), { id: 'dl-no-url' });
       return;
     }
+
+    let interval: any;
 
     const ext = type === 'video' ? 'mp4' : 'mp3';
     const filename = `savepro-${type}-${Date.now()}.${ext}`;
@@ -149,28 +155,26 @@ export default function DownloadForm() {
     if (type === 'video') {
       setVideoDownloading(true);
       setVideoProgress(1);
-      const interval = setInterval(() => {
+      interval = setInterval(() => {
         setVideoProgress(prev => {
-          if (prev >= 100) {
-            clearInterval(interval);
-            return 100;
-          }
-          // Increment by ~2.5% every 100ms to reach 100% in 4 seconds
-          return Math.min(100, prev + 2.5);
+          if (prev >= 95) return 95; // Wait at 95% until fetch completes
+          // Slow down as it approaches 95%
+          const remaining = 95 - prev;
+          const increment = Math.max(0.1, remaining * 0.05);
+          return Math.min(95, prev + increment);
         });
-      }, 100);
+      }, 150);
     } else {
       setMusicDownloading(true);
       setMusicProgress(1);
-      const interval = setInterval(() => {
+      interval = setInterval(() => {
         setMusicProgress(prev => {
-          if (prev >= 100) {
-            clearInterval(interval);
-            return 100;
-          }
-          return Math.min(100, prev + 2.5);
+          if (prev >= 95) return 95;
+          const remaining = 95 - prev;
+          const increment = Math.max(0.1, remaining * 0.05);
+          return Math.min(95, prev + increment);
         });
-      }, 100);
+      }, 150);
     }
 
     const toastId = `dl-${type}-error`;
@@ -213,6 +217,11 @@ export default function DownloadForm() {
 
       // Create object URL and trigger download
       const objectUrl = URL.createObjectURL(blob);
+      
+      // Jump to 100% immediately on success
+      if (type === 'video') setVideoProgress(100);
+      else setMusicProgress(100);
+
       const link = document.createElement('a');
       link.href = objectUrl;
       link.download = filename;
@@ -225,17 +234,19 @@ export default function DownloadForm() {
       URL.revokeObjectURL(objectUrl);
 
       // Show success toast
-      toast.success(type === 'video' ? t('downloadStartedVideo') : t('downloadStartedMusic'), { id: `dl-${type}-success`, dir: 'ltr' });
+      toast.success(type === 'video' ? t('downloadStartedVideo') : t('downloadStartedMusic'), { id: `dl-${type}-success` });
     } catch (err: any) {
+      const errorMsg = err instanceof Error ? err.message : String(err);
       if (err.name === 'TypeError') {
-        toast.error(type === 'video' ? t('downloadErrorVideo') : t('downloadErrorMusic'), { id: toastId, dir: 'ltr' });
+        toast.error(type === 'video' ? t('downloadErrorVideo') : t('downloadErrorMusic'), { id: toastId });
       } else if (err.name === 'AbortError') {
-        toast.error(t('downloadTimeout'), { id: toastId, dir: 'ltr' });
+        toast.error(t('downloadTimeout'), { id: toastId });
       } else {
-        toast.error(`${type === 'video' ? t('downloadingVideo') : t('downloadingMusic')}: ${err.message}`, { id: toastId, dir: 'ltr' });
+        toast.error(`${type === 'video' ? t('downloadingVideo') : t('downloadingMusic')}: ${errorMsg}`, { id: toastId });
       }
       console.error('[Download] Error:', err);
     } finally {
+      if (interval) clearInterval(interval);
       // Always reset loading state
       if (type === 'video') {
         setVideoDownloading(false);
@@ -255,7 +266,7 @@ export default function DownloadForm() {
         className="w-full bg-white/70 dark:bg-slate-900/70 backdrop-blur-xl p-2 rounded-2xl shadow-[0_8px_30px_rgb(0,0,0,0.12)] dark:shadow-[0_8px_30px_rgba(0,255,255,0.1)] border border-white/20 dark:border-cyan-500/20 flex flex-col md:flex-row gap-2 relative overflow-hidden"
       >
         <div className="relative flex-1">
-          <div className="absolute inset-y-0 right-0 pl-3 flex items-center pr-4 pointer-events-none">
+          <div className="absolute inset-y-0 end-0 pe-3 flex items-center ps-4 pointer-events-none">
             <LinkIcon className="h-5 w-5 text-slate-400 dark:text-cyan-500/50" />
           </div>
           <input
@@ -263,7 +274,7 @@ export default function DownloadForm() {
             value={url}
             onChange={(e) => setUrl(e.target.value)}
             placeholder={t('inputPlaceholder')}
-            className="block w-full rounded-xl border-0 py-4 pr-12 pl-4 bg-transparent text-slate-900 dark:text-white ring-1 ring-inset ring-slate-200/50 dark:ring-slate-700/50 placeholder:text-slate-400 focus:ring-2 focus:ring-inset focus:ring-cyan-500 text-lg outline-none transition-all shadow-inner bg-white/50 dark:bg-black/20"
+            className="block w-full rounded-xl border-0 py-4 pe-12 ps-4 bg-transparent text-slate-900 dark:text-white ring-1 ring-inset ring-slate-200/50 dark:ring-slate-700/50 placeholder:text-slate-400 focus:ring-2 focus:ring-inset focus:ring-cyan-500 text-lg outline-none transition-all shadow-inner bg-white/50 dark:bg-black/20 text-start"
           />
         </div>
         {loading ? (
@@ -304,7 +315,7 @@ export default function DownloadForm() {
               animate={{ opacity: 1, y: 0, scale: 1 }}
               exit={{ opacity: 0, scale: 0.9 }}
               transition={{ duration: 0.4, ease: "easeOut" }}
-              className="w-full bg-white/85 dark:bg-slate-900/85 backdrop-blur-xl rounded-3xl shadow-2xl dark:shadow-cyan-900/10 border border-white/50 dark:border-cyan-500/40 p-6 flex flex-col md:flex-row gap-8 items-center text-right"
+              className="w-full bg-white/85 dark:bg-slate-900/85 backdrop-blur-xl rounded-3xl shadow-2xl dark:shadow-cyan-900/10 border border-white/50 dark:border-cyan-500/40 p-6 flex flex-col md:flex-row gap-8 items-center text-start"
             >
               <div className="w-full md:w-1/3 aspect-[3/4] rounded-2xl overflow-hidden bg-slate-100 dark:bg-slate-800 relative flex-shrink-0 border-4 border-white/50 dark:border-slate-800/50 shadow-lg">
                 <img src={videoData.cover} alt="Video Cover" width="300" height="400" className="w-full h-full object-cover" loading="lazy" />
@@ -321,29 +332,31 @@ export default function DownloadForm() {
                   transition={{ delay: 0.2 }}
                 >
                   <h3 className="text-2xl font-black text-slate-900 dark:text-white line-clamp-2 leading-tight tracking-tight drop-shadow-sm">{videoData.title}</h3>
-                  <p className="text-slate-500 dark:text-cyan-400 mt-2 font-medium flex items-center gap-1 justify-end">
+                  <p className="text-slate-500 dark:text-cyan-400 mt-2 font-medium flex items-center gap-1 justify-start">
                     @{videoData.author}
                   </p>
                 </motion.div>
 
                 <div className="flex flex-col gap-3 mt-2">
                     <div className="flex flex-col gap-1">
-                      <button
-                        onClick={() => handleDownload(videoData.videoUrl, 'video')}
+                      <motion.button
+                        whileHover={{ scale: 1.02, boxShadow: "0 10px 25px -5px rgba(6, 182, 212, 0.4)" }}
+                        whileTap={{ scale: 0.98 }}
+                        onClick={() => videoData.videoUrl && handleDownload(videoData.videoUrl, 'video')}
                         disabled={videoDownloading}
                         style={{ minWidth: '220px' }}
-                        className="flex items-center justify-center gap-2 rounded-xl bg-gradient-to-r from-cyan-600 to-purple-600 px-6 py-4 text-lg font-bold text-white shadow-lg shadow-cyan-500/30 hover:shadow-cyan-500/50 hover:from-cyan-500 hover:to-purple-500 border border-cyan-400/20 disabled:opacity-70 disabled:cursor-not-allowed group"
+                        className="flex items-center justify-center gap-2 rounded-xl bg-gradient-to-r from-cyan-600 to-purple-600 px-6 py-4 text-lg font-bold text-white shadow-lg shadow-cyan-500/30 hover:from-cyan-500 hover:to-purple-500 border border-cyan-400/20 disabled:opacity-70 disabled:cursor-not-allowed group transition-all"
                         aria-label={videoDownloading ? t('downloadingVideoAria') : t('videoQuality')}
                       >
                         {videoDownloading ? (
                           <Loader2 className="w-6 h-6 animate-spin" />
                         ) : (
                           <>
-                            <Download className="w-6 h-6 group-hover:bounce" />
+                            <Download className="w-6 h-6 group-hover:animate-bounce" />
                             {t('videoQuality')}
                           </>
                         )}
-                      </button>
+                      </motion.button>
                       
                       {videoProgress > 0 && (
                         <div className="w-full mt-4 animate-in fade-in zoom-in duration-300">
@@ -370,11 +383,13 @@ export default function DownloadForm() {
                   
                     {videoData.musicUrl && (
                         <div className="flex flex-col gap-1">
-                          <button
-                            onClick={() => handleDownload(videoData.musicUrl, 'music')}
+                          <motion.button
+                            whileHover={{ scale: 1.02, backgroundColor: "rgba(255, 255, 255, 0.9)", boxShadow: "0 10px 20px -5px rgba(0, 0, 0, 0.1)" }}
+                            whileTap={{ scale: 0.98 }}
+                            onClick={() => videoData.musicUrl && handleDownload(videoData.musicUrl, 'music')}
                             disabled={musicDownloading}
                             style={{ minWidth: '220px' }}
-                            className="flex items-center justify-center gap-2 rounded-xl bg-white/50 dark:bg-slate-800/50 backdrop-blur-md px-6 py-4 text-lg font-bold text-slate-800 dark:text-white hover:bg-white dark:hover:bg-slate-700 hover:shadow-lg border border-slate-200 dark:border-slate-600 disabled:opacity-70 disabled:cursor-not-allowed"
+                            className="flex items-center justify-center gap-2 rounded-xl bg-white/50 dark:bg-slate-800/50 backdrop-blur-md px-6 py-4 text-lg font-bold text-slate-800 dark:text-white hover:shadow-lg border border-slate-200 dark:border-slate-600 disabled:opacity-70 disabled:cursor-not-allowed transition-all"
                             aria-label={musicDownloading ? t('downloadingMusicAria') : t('musicQuality')}
                           >
                             {musicDownloading ? (
@@ -385,7 +400,7 @@ export default function DownloadForm() {
                                 {t('musicQuality')}
                               </>
                             )}
-                          </button>
+                          </motion.button>
 
                           {musicProgress > 0 && (
                             <div className="w-full mt-4 animate-in fade-in zoom-in duration-300">

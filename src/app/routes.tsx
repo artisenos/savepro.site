@@ -3,7 +3,7 @@ import { lazy, Suspense } from "react";
 import Header from "./components/Header";
 import Footer from "./components/Footer";
 import { Toaster } from "./components/ui/sonner";
-import { useLanguage } from "./app/contexts/LanguageContext";
+import { useLanguage } from "./contexts/LanguageContext";
 
 const Home = lazy(() => import("./pages/Home"));
 const PrivacyPolicy = lazy(() => import("./pages/PrivacyPolicy"));
