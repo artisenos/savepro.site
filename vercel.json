@@ -3,9 +3,11 @@
   "framework": "vite",
   "cleanUrls": true,
   "trailingSlash": false,
+  "buildCommand": "npm run build",
+  "outputDirectory": "dist",
   "functions": {
     "api/**/*.js": {
-      "runtime": "edge",
+      "runtime": "nodejs22.x",
       "maxDuration": 60,
       "memory": 1024
     }
@@ -39,6 +41,5 @@
     { "source": "/api/info", "destination": "/api/info.js" },
     { "source": "/api/download", "destination": "/api/download.js" },
     { "source": "/(.*)", "destination": "/index.html" }
-  ],
-  "crons": []
+  ]
 }
