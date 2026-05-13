@@ -1,7 +1,6 @@
 {
   "version": 2,
-  "root": "./",
-  "framework": null,
+  "framework": "vite",
   "cleanUrls": true,
   "trailingSlash": false,
   "buildCommand": "npm run build",
@@ -27,36 +26,11 @@
         { "key": "Referrer-Policy", "value": "strict-origin-when-cross-origin" },
         { "key": "Permissions-Policy", "value": "camera=(), microphone=(), geolocation=()" }
       ]
-    },
-    {
-      "source": "/assets/(.*)",
-      "headers": [
-        { "key": "Cache-Control", "value": "public, max-age=31536000, immutable" }
-      ]
-    },
-    {
-      "source": "/favicon.ico",
-      "headers": [
-        { "key": "Cache-Control", "value": "public, max-age=31536000, immutable" }
-      ]
     }
   ],
   "rewrites": [
     { "source": "/api/info", "destination": "/api/info.js" },
     { "source": "/api/download", "destination": "/api/download.js" },
-    { "source": "/api/health", "destination": "/api/health.js" },
-    { "source": "/assets/(.*)", "destination": "/dist/assets/$1" },
-    { "source": "/favicon-16x16.png", "destination": "/dist/favicon-16x16.png" },
-    { "source": "/favicon-32x32.png", "destination": "/dist/favicon-32x32.png" },
-    { "source": "/favicon-48x48.png", "destination": "/dist/favicon-48x48.png" },
-    { "source": "/favicon-192x192.png", "destination": "/dist/favicon-192x192.png" },
-    { "source": "/favicon-512x512.png", "destination": "/dist/favicon-512x512.png" },
-    { "source": "/favicon.ico", "destination": "/dist/favicon.ico" },
-    { "source": "/og-preview.png", "destination": "/dist/og-preview.png" },
-    { "source": "/apple-touch-icon.png", "destination": "/dist/apple-touch-icon.png" },
-    { "source": "/robots.txt", "destination": "/dist/robots.txt" },
-    { "source": "/sitemap.xml", "destination": "/dist/sitemap.xml" },
-    { "source": "/site.webmanifest", "destination": "/dist/site.webmanifest" },
-    { "source": "/(.*)", "destination": "/dist/index.html" }
+    { "source": "/api/health", "destination": "/api/health.js" }
   ]
 }
