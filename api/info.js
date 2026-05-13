@@ -1,76 +1,256 @@
-import { isValidTikTokUrl, sanitizeInput, setCorsHeaders, setSecurityHeaders, logEvent } from './_lib/helpers.js';
-import { getFromCache, setToCache } from './_lib/cache.js';
-import { downloadVideo } from './_lib/services/downloader.js';
-import { checkAuth } from './_lib/middleware/auth.js';
-import { checkRateLimit } from './_lib/middleware/rateLimit.js';
-import config from './_lib/config.js';
+// ============================================
+// SavePro API - Main Video Info Endpoint
+// Vercel Edge Function - Waterfall Failover + OIDC Auth
+// ============================================
 
-export default async function handler(req, res) {
-  setCorsHeaders(res);
-  setSecurityHeaders(res);
+export const config = {
+  runtime: 'edge',
+  regions: ['iad1', 'sfo1', 'fra1'], // US East, US West, Frankfurt
+};
 
-  if (req.method === 'OPTIONS') return res.status(200).end();
+const ENGINES = ['savetik', 'snaptik', 'ssstik'];
+const CACHE_TTL = 900; // 15 minutes
 
-  const ip = req.headers['x-forwarded-for'] || req.socket?.remoteAddress || 'unknown';
+export default async function handler(req) {
+  const requestId = crypto.randomUUID().slice(0, 8);
+  const startTime = Date.now();
 
-  if (req.method !== 'GET' && req.method !== 'POST') {
-    logEvent('WARN', 'API_INFO', 'Method Not Allowed', { ip, method: req.method });
-    return res.status(405).json({ code: 'METHOD_NOT_ALLOWED', msg: 'Method Not Allowed.' });
+  // ═══ IDENTITY VERIFICATION (Zero Trust) ═══
+  const auth = await verifyRequest(req);
+
+  // ═══ RATE LIMITING ═══
+  try {
+    const { checkRequestRateLimit } = await import('./_lib/rateLimit.js');
+    const { getRateLimitConfig } = await import('./_lib/auth.js');
+    
+    const rateLimitConfig = getRateLimitConfig(auth);
+    const rateLimit = await checkRequestRateLimit(req, { ip: rateLimitConfig });
+    
+    if (!rateLimit.allowed) {
+      return rateLimit.response;
+    }
+  } catch (rateLimitError) {
+    console.log(`[${requestId}] Rate limit check failed, continuing securely...`);
   }
 
-  const authErr = checkAuth(req);
-  if (authErr) {
-    logEvent('WARN', 'API_INFO', 'Auth Failed', { ip });
-    return res.status(401).json({ code: 'UNAUTHORIZED', msg: authErr.message });
+  // Reject unauthorized
+  if (!auth.authorized) {
+    console.log(`[${requestId}] 🔒 Unauthorized: ${auth.error}`);
+    return jsonResponse({ success: false, error: 'Unauthorized access denied' }, 401);
   }
-
-  const rateErr = await checkRateLimit(ip);
-  if (rateErr) {
-    logEvent('WARN', 'API_INFO', 'Rate Limit Exceeded', { ip });
-    return res.status(429).json({ code: 'RATE_LIMIT', msg: rateErr.message });
-  }
-
-  const rawUrl = req.method === 'POST' ? req.body?.url : req.query?.url;
-
-  if (!isValidTikTokUrl(rawUrl)) {
-    logEvent('INFO', 'API_INFO', 'Invalid URL', { ip, url: rawUrl });
-    return res.status(400).json({ code: 'INVALID_URL', msg: 'Invalid TikTok URL.' });
-  }
-
-  const cleanUrl = sanitizeInput(rawUrl);
-  const cacheKey = `info:${cleanUrl}`;
 
   try {
-    const cached = await getFromCache(cacheKey);
+    // Parse request
+    const { searchParams } = new URL(req.url);
+    const url = searchParams.get('url');
+    const apiKey = req.headers.get('x-api-key') || searchParams.get('key');
+
+    // Validate API key (if required)
+    if (!apiKey && process.env.API_KEY) {
+      return jsonResponse({ success: false, error: 'API key required' }, 401);
+    }
+    if (process.env.API_KEY && apiKey !== process.env.API_KEY) {
+      return jsonResponse({ success: false, error: 'Invalid API key' }, 403);
+    }
+
+    // Validate URL
+    if (!url) {
+      return jsonResponse({ success: false, error: 'URL parameter is required' }, 400);
+    }
+
+    // Normalize TikTok URL
+    const normalizedUrl = normalizeTikTokUrl(url);
+    if (!normalizedUrl) {
+      return jsonResponse({ success: false, error: 'Invalid TikTok URL' }, 400);
+    }
+
+    // Check cache first
+    const cacheKey = `info:${normalizedUrl}`;
+    const cached = await getCache(cacheKey);
     if (cached) {
-      logEvent('INFO', 'API_INFO', 'Cache Hit', { ip, url: cleanUrl });
-      return res.status(200).json({ code: 0, data: cached });
+      console.log(`[${requestId}] Cache hit for ${normalizedUrl}`);
+      return jsonResponse({ success: true, data: cached, cached: true }, 200, true);
     }
 
-    const result = await downloadVideo(cleanUrl);
+    // Waterfall: Try each engine until success
+    console.log(`[${requestId}] Starting waterfall for: ${normalizedUrl}`);
+    let lastError = null;
+    let usedEngine = null;
 
-    // If we reach here, it's successful (tikwm.js returns {success: true})
-    const payload = { ...result, cached: false };
-    await setToCache(cacheKey, payload, config.cache.ttl);
+    for (const engine of ENGINES) {
+      console.log(`[${requestId}] Trying engine: ${engine}`);
+      try {
+        const result = await fetchWithEngine(engine, normalizedUrl, requestId);
+        if (result && result.videoUrl) {
+          usedEngine = engine;
 
-    logEvent('INFO', 'API_INFO', 'Success', { ip, url: cleanUrl });
-    return res.status(200).json({ code: 0, data: payload });
+          // Extract and normalize data
+          const data = {
+            title: result.title || 'TikTok Video',
+            author: result.author || result.username || 'Unknown',
+            cover: result.cover || result.thumbnail || '',
+            videoUrl: result.videoUrl || result.url || result.play || '',
+            videoUrlHd: result.videoUrlHd || result.hd || result.videoUrl || '',
+            videoUrlSd: result.videoUrlSd || result.sd || '',
+            music: result.music || result.musicUrl || result.audio || '',
+            musicUrl: result.music || result.musicUrl || '',
+            duration: result.duration || 0,
+            stats: result.stats || {
+              likeCount: result.likes || 0,
+              commentCount: result.comments || 0,
+              shareCount: result.shares || 0,
+              viewCount: result.views || 0,
+            },
+            watermark: result.watermark || '',
+            createdAt: result.createdAt || Date.now(),
+          };
 
-  } catch (err) {
-    let errorCode = 'SERVER_ERROR';
-    let statusCode = 500;
-    let message = err.message || 'Internal Server Error';
+          // Cache the result
+          await setCache(cacheKey, data, CACHE_TTL);
 
-    if (err.message === 'PRIVATE_VIDEO' || err.message === 'DELETED_VIDEO') {
-      errorCode = err.message;
-      statusCode = 403; // or 404
-    } else if (err.name === 'AbortError') {
-      errorCode = 'TIMEOUT';
-      statusCode = 504;
-      message = 'Request timed out.';
+          console.log(`[${requestId}] Success with engine: ${engine}, time: ${Date.now() - startTime}ms`);
+
+          return jsonResponse({
+            success: true,
+            data,
+            engine: usedEngine,
+            cached: false,
+            requestId,
+          }, 200, true);
+        }
+      } catch (err) {
+        console.log(`[${requestId}] Engine ${engine} failed: ${err.message}`);
+        lastError = err;
+        // Continue to next engine
+      }
     }
 
-    logEvent('ERROR', 'API_INFO', 'Request Failed', { ip, url: cleanUrl, errorCode, error: err.message });
-    return res.status(statusCode).json({ code: errorCode, msg: message });
+    // All engines failed
+    return jsonResponse({
+      success: false,
+      error: 'Failed to fetch video info. All engines exhausted.',
+      details: lastError?.message || 'Unknown error',
+      requestId,
+    }, 502);
+
+  } catch (error) {
+    let safeMessage = error.message;
+    try {
+      const { scrubOidcCredentials } = await import('./_lib/auth.js');
+      const { scrubRedisCredentials } = await import('./_lib/helpers.js');
+      safeMessage = scrubRedisCredentials(scrubOidcCredentials(safeMessage));
+    } catch {
+      // Ignore scrubbing failure
+    }
+    console.error(`[${requestId}] Fatal error: ${safeMessage}`);
+    return jsonResponse({
+      success: false,
+      error: 'Internal server error',
+      requestId,
+    }, 500);
   }
+}
+
+// ============================================
+// Helper Functions
+// ============================================
+
+function normalizeTikTokUrl(url) {
+  try {
+    // Handle short URLs
+    let normalized = url.trim();
+
+    // Remove tracking parameters
+    normalized = normalized.split('?')[0];
+
+    // Extract video ID from various TikTok URL formats
+    const patterns = [
+      /tiktok\.com\/@[\w.]+\/video\/(\d+)/,
+      /tiktok\.com\/v\/(\d+)/,
+      /tiktok\.com\/(\d+)/,
+      /vm\.tiktok\.com\/([\w]+)/,
+      /www\.tiktok\.com\/@[\w.]+\/video\/(\d+)/,
+    ];
+
+    for (const pattern of patterns) {
+      const match = normalized.match(pattern);
+      if (match) {
+        // Return standard URL format
+        if (pattern.source.includes('vm.tiktok')) {
+          return `https://vm.tiktok.com/${match[1]}`;
+        }
+        return normalized;
+      }
+    }
+
+    // If it's already a valid URL, return it
+    if (normalized.includes('tiktok.com')) {
+      return normalized;
+    }
+
+    return null;
+  } catch {
+    return null;
+  }
+}
+
+async function fetchWithEngine(engine, url, requestId) {
+  const { fetchVideo } = await import('./_lib/engines.js');
+  return fetchVideo(engine, url, requestId);
+}
+
+async function getCache(key) {
+  try {
+    const { getRedis } = await import('./_lib/helpers.js');
+    const redis = getRedis();
+    if (redis) {
+      const data = await redis.get(`savepro:${key}`);
+      return data ? JSON.parse(data) : null;
+    }
+  } catch {
+    // Redis not available
+  }
+  return null;
+}
+
+async function setCache(key, value, ttl) {
+  try {
+    const { getRedis } = await import('./_lib/helpers.js');
+    const redis = getRedis();
+    if (redis) {
+      await redis.set(`savepro:${key}`, JSON.stringify(value), { ex: ttl });
+    }
+  } catch {
+    // Redis not available
+  }
+}
+
+async function verifyRequest(req) {
+  try {
+    const { verifyRequest: verify } = await import('./_lib/auth.js');
+    return await verify(req);
+  } catch {
+    // Fail secure if auth module cannot load
+    return { authorized: false, error: 'auth_module_unavailable' };
+  }
+}
+
+function jsonResponse(data, status = 200, cacheable = false) {
+  const headers = {
+    'Content-Type': 'application/json',
+    'Access-Control-Allow-Origin': '*',
+    'Access-Control-Allow-Methods': 'GET, POST, OPTIONS',
+    'Access-Control-Allow-Headers': 'Content-Type, x-api-key, Authorization',
+  };
+
+  if (cacheable) {
+    headers['Cache-Control'] = 'public, s-maxage=900, stale-while-revalidate=60';
+  } else {
+    headers['Cache-Control'] = 'no-cache, no-store, must-revalidate';
+  }
+
+  return new Response(JSON.stringify(data), {
+    status,
+    headers,
+  });
 }

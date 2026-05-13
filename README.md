@@ -1,214 +1,203 @@
-# 🚀 SavePro v2.1.0 — Premium TikTok Video Downloader
+# SavePro - TikTok Video Downloader API
 
-![SavePro](https://img.shields.io/badge/SavePro-v2.1.0-cyan?style=for-the-badge&logo=tiktok)
-![React](https://img.shields.io/badge/react-%2320232a.svg?style=for-the-badge&logo=react&logoColor=%2361DAFB)
-![TypeScript](https://img.shields.io/badge/typescript-%23007ACC.svg?style=for-the-badge&logo=typescript&logoColor=white)
-![TailwindCSS](https://img.shields.io/badge/tailwindcss-%2338B2AC.svg?style=for-the-badge&logo=tailwind-css&logoColor=white)
-![Vite](https://img.shields.io/badge/vite-%23646CFF.svg?style=for-the-badge&logo=vite&logoColor=white)
-![PHP](https://img.shields.io/badge/PHP_Bridge-%23777BB4.svg?style=for-the-badge&logo=php&logoColor=white)
-
-**SavePro** is a production-ready web application for downloading TikTok videos without watermarks and extracting MP3 audio. Built with React + Vite + TypeScript, styled with Tailwind CSS, and backed by a secure PHP API bridge with RapidAPI integration.
+**Production-Ready SaaS Platform** | Powered by Vercel Edge Runtime, OIDC Zero Trust, and Redis HTTP API
 
 ---
 
-## ✨ Key Features
+## Overview
 
-- 🎥 **No Watermark HD Downloads** — Direct Blob-based downloads via PHP proxy, bypassing CORS restrictions
-- 🎵 **MP3 Extraction** — High-quality audio download from any TikTok video
-- 🌍 **10-Language Support** — Arabic, English, Spanish, French, German, Turkish, Chinese, Russian, Hindi, Portuguese
-- 🎨 **Neon Dark Theme** — Cyan/Purple gradient branding with Glassmorphism UI
-- 🌐 **Apache/PHP Hosting** — Production-ready `.htaccess` SPA fallback, no Vercel dependency
-- 🔒 **Tight Coupling Prevention** — Synchronized timeouts (14s PHP → 15s Frontend), semantic HTTP status codes, zero-leak output
+SavePro is a high-performance TikTok video downloader with no watermark extraction, built on a serverless edge architecture. It provides a clean REST API for downloading videos and audio, with enterprise-grade security, intelligent caching, and multi-region deployment.
+
+**Live:** [https://savepro.site](https://savepro.site)
 
 ---
 
-## 🛠️ Architecture v2.1.0
+## Architecture
 
-```
-┌─────────────────────────────────────────────────┐
-│                  Browser (React SPA)              │
-│  ┌───────────────────────────────────────────┐   │
-│  │  DownloadForm.tsx  │  Home.tsx             │   │
-│  │  ┌───────────────┐ │  ┌─────────────────┐ │   │
-│  │  │ POST metadata │ │  │ Download from    │ │   │
-│  │  │ → {url}       │ │  │ history via PHP  │ │   │
-│  │  └──────┬────────┘ │  │ bridge proxy     │ │   │
-│  └─────────┼──────────┘  └────────┬──────────┘   │
-└────────────┼──────────────────────┼──────────────┘
-             │ POST /api-bridge.php  │ GET ?action=download
-             ▼                      ▼
-┌─────────────────────────────────────────────────┐
-│           PHP Bridge (api-bridge.php)             │
-│  ┌───────────────────────────────────────────┐   │
-│  │ Validates URL → Calls RapidAPI            │   │
-│  │ Returns {code, msg, data} JSON            │   │
-│  │ HTTP 200/400/405/502 with proper headers  │   │
-│  └───────────────────────────────────────────┘   │
-└────────────────────┬────────────────────────────┘
-                     │ RapidAPI GET
-                     ▼
-┌─────────────────────────────────────────────────┐
-│        RapidAPI (tiktok-video-no-watermark2)      │
-└─────────────────────────────────────────────────┘
-```
-
-### Key Technical Details
-
-| Layer | Detail |
-|-------|--------|
-| **Frontend** | React 18, Vite 6, TypeScript, Tailwind CSS v4, framer-motion, sonner |
-| **API Bridge** | PHP 8.x, cURL, RapidAPI (`x-rapidapi-key`) |
-| **Timeout Sync** | Backend `CURLOPT_TIMEOUT=14s` < Frontend `AbortController=15s` |
-| **Download Flow** | `fetch(PHP proxy)` → Blob → `URL.createObjectURL` → hidden `<a>` click |
-| **Error Status** | 400 bad request, 405 wrong method, 502 upstream failure, 200 explicit success |
-| **Toast Strategy** | Sonner with `id` deduplication prevents overlapping error messages |
-| **Hosting** | Apache with `.htaccess` SPA rewrite; PHP serves `/api-bridge.php` |
+| Layer | Technology |
+|---|---|
+| Runtime | Vercel Edge Runtime (Node.js) |
+| Authentication | OIDC + JWT (Vercel + `jose`) |
+| Caching | Redis HTTP API (direct fetch) |
+| API | REST over Edge Functions |
+| Frontend | Static SPA (HTML/CSS/JS) |
 
 ---
 
-## 🚀 Getting Started
+## API Endpoints
 
-### Prerequisites
+### `GET /api/health`
+Health check endpoint for monitoring.
 
-- Node.js v18+
-- npm or yarn
-- PHP 8.x (for local API bridge testing)
-
-### Installation
-
-```bash
-git clone https://github.com/your-username/savepro.git
-cd savepro
-npm install
-```
-
-### Running Locally
-
-You need **two terminals**:
-
-**Terminal 1** — PHP API bridge:
-```bash
-php -S localhost:3001 -t public
-```
-
-**Terminal 2** — Vite dev server:
-```bash
-npm run dev
-```
-
-The Vite proxy (`vite.config.ts`) forwards `/api-bridge.php` to `localhost:3001`.
-
-### Production Build
-
-```bash
-npm run build
-```
-
-Upload the `dist/` folder and `public/api-bridge.php` to your Apache/PHP hosting.
-
----
-
-## 📂 Project Structure
-
-```
-├── src/
-│   ├── app/
-│   │   ├── components/
-│   │   │   ├── DownloadForm.tsx    # Core download UI, Blob download logic
-│   │   │   ├── Header.tsx          # Logo + navigation
-│   │   │   └── Footer.tsx          # Links + branding
-│   │   ├── pages/
-│   │   │   ├── Home.tsx            # Main page with history
-│   │   │   ├── TermsOfService.tsx
-│   │   │   ├── PrivacyPolicy.tsx
-│   │   │   ├── DMCA.tsx
-│   │   │   └── Contact.tsx
-│   │   ├── config/
-│   │   │   └── LanguageConfig.ts   # 10-language translations
-│   │   ├── contexts/
-│   │   │   └── LanguageContext.tsx  # Language switching context
-│   │   └── routes.tsx              # React Router config
-│   └── styles/
-│       ├── index.css
-│       ├── tailwind.css            # Custom spinner + utilities
-│       ├── fonts.css               # Tajawal font import
-│       └── theme.css               # Dark/light vars
-├── public/
-│   ├── api-bridge.php              # 🔧 PHP backend (RapidAPI proxy)
-│   ├── index.html                  # Root HTML with SEO + OG tags
-│   ├── site.webmanifest
-│   ├── favicon.ico / .png set
-│   ├── apple-touch-icon.png
-│   ├── logo.svg
-│   └── og-preview.png
-├── scripts/
-│   └── generate-icons.mjs          # Favicon/OG generator via sharp
-├── vite.config.ts
-└── package.json
-```
-
----
-
-## 🌐 API Contract
-
-### POST `/api-bridge.php`
-
-Request:
-```json
-{ "url": "https://www.tiktok.com/@user/video/123456789" }
-```
-
-Success Response `HTTP 200`:
 ```json
 {
-  "code": 0,
-  "msg": "success",
-  "data": {
-    "title": "Video title",
-    "author": "@username",
-    "cover": "https://...",
-    "hdplay": "https://...",
-    "play": "https://...",
-    "wmplay": "https://...",
-    "music": "https://...",
-    "duration": 30
+  "status": "ok",
+  "version": "1.0.0",
+  "services": {
+    "redis": { "status": "connected", "type": "redis" },
+    "auth": { "status": "enabled", "mode": "production" },
+    "oidc": { "issuer": "https://oidc.vercel.com" }
+  },
+  "environment": { "node": "edge", "platform": "vercel" },
+  "responseTime": 12
+}
+```
+
+### `GET /api/video?url=<tiktok_url>`
+Download a TikTok video or audio.
+
+**Query Parameters:**
+- `url` (required) - TikTok video URL
+- `format` (optional) - `video` or `mp3` (default: `video`)
+- `key` (optional) - API key for higher rate limits
+
+**Response:**
+```json
+{
+  "success": true,
+  "video": {
+    "url": "https://...",
+    "title": "...",
+    "duration": 60,
+    "thumbnail": "https://..."
   }
 }
 ```
 
-Error Response `HTTP 400/502`:
-```json
-{ "code": -1, "msg": "وصف الخطأ بالعربية" }
+---
+
+## Security
+
+### Zero Trust Architecture
+
+Every API request is verified against Vercel's OIDC provider:
+
+- **Issuer:** `https://oidc.vercel.com`
+- **Audience:** `https://vercel.com/dzwiliampw-5524s-projects`
+- **Token Validation:** Full JWT verification with `jose` library
+
+### Internal Environment Verification
+
+Production requests must originate from Vercel's internal environment with a valid `VERCEL_OIDC_TOKEN`. External requests without a Bearer token receive public (limited) rate limits.
+
+### Credential Scrubbing
+
+All logs automatically scrub sensitive data before output:
+- Passwords, API keys, Bearer tokens
+- JWT tokens, OIDC tokens
+- Redis connection strings
+
+---
+
+## Rate Limiting
+
+| Tier | Requests | Window | Condition |
+|---|---|---|---|
+| Public | 10 | 60s | No auth token |
+| Authenticated | 500 | 60s | Valid JWT |
+| Developer | 10,000 | 60s | Dev environment |
+
+---
+
+## Redis HTTP API
+
+SavePro connects directly to Redis via HTTP API (fetch) for maximum edge compatibility. No SDK dependencies.
+
+**Environment Variables:**
+```env
+REDIS_URL=redis://default:password@host:port
 ```
 
-### GET `/api-bridge.php?action=download&url=...&type=video|music`
-Proxies and serves the binary media file as a forced download. Returns `HTTP 200` with `Content-Type: video/mp4` or `HTTP 502` with JSON error.
+The client automatically handles:
+- `GET` - Cache retrieval
+- `SET` - Cache storage with TTL
+- `INCR` - Rate limit counters
+- `DEL` - Cache invalidation
 
 ---
 
-## 🧪 Error Handling Matrix
+## Environment Variables
 
-| Scenario | HTTP Status | Toast ID | User Message |
-|----------|-------------|----------|-------------|
-| Invalid/empty URL input | Client-side | `empty-input` | الرجاء إدخال رابط تيك توك أولاً |
-| Server 4xx/5xx | 400/405/502 | `api-error` | فشل الاتصال بالخادم (502) |
-| Network failure | `TypeError` | `api-error` | تحقق من اتصالك بالإنترنت |
-| Request timeout | `AbortError` | `api-error` | انتهت مهلة الطلب |
-| Invalid JSON from server | Parse error | `api-error` | استجابة غير صالحة من الخادم |
-| API-level error (code ≠ 0) | 502 | `api-error` | (message from API) |
-| Download CORS/network fail | `TypeError` | `dl-{type}-error` | تعذر تحميل الفيديو: تحقق من اتصالك |
-| Download success | 200 | `dl-{type}-success` | تم بدء تحميل الفيديو |
+### Required (Production)
 
----
+| Variable | Description |
+|---|---|
+| `REDIS_URL` | Redis HTTP API connection string |
+| `VERCEL_OIDC_TOKEN` | Vercel internal OIDC token (auto-injected) |
 
-## 🧩 Badges (Outdated — preserved for reference)
+### Optional
 
-The badge line for Vercel Serverless and Framer Motion are kept for reference. Current architecture uses PHP Bridge instead of Vercel, and framer-motion is scoped to page transitions only (removed from download section for CLS stability).
+| Variable | Description |
+|---|---|
+| `PROXY_URL` | Proxy server URL |
+| `PROXY_USER` | Proxy username |
+| `PROXY_PASS` | Proxy password |
 
 ---
 
-## 📝 License
+## Deployment
 
-This project is for educational and personal use. Please respect TikTok's Terms of Service and content creators' copyrights. Not affiliated with TikTok or ByteDance.
+SavePro deploys automatically to Vercel via Git.
 
-*Crafted with ❤️ by the SavePro Team.*
+1. Push to GitHub
+2. Import in [Vercel Dashboard](https://vercel.com/dzwiliampw-5524s-projects)
+3. Configure environment variables
+4. Deploy
+
+No build step required — pure Edge Runtime JavaScript.
+
+---
+
+## Project Structure
+
+```
+savepro.site/
+├── api/
+│   ├── _lib/
+│   │   ├── auth.js         # OIDC + JWT verification
+│   │   ├── helpers.js      # Redis HTTP client + utils
+│   │   ├── proxy.js        # Hybrid proxy manager
+│   │   ├── fingerprint.js  # User-Agent spoofing
+│   │   └── rateLimit.js    # Rate limiting middleware
+│   ├── health.js           # Health check endpoint
+│   └── package.json        # (jose only)
+├── public/                 # Static assets + favicons
+├── index.html              # Frontend SPA
+└── package.json            # Frontend dependencies
+```
+
+---
+
+## Development
+
+```bash
+# Install dependencies
+npm install
+
+# Local dev (no edge runtime)
+# Set dev token for testing:
+VERCEL_ENV=preview node api/index.js
+
+# Build frontend
+npm run build
+```
+
+---
+
+## Features
+
+- Download TikTok videos without watermark
+- Extract MP3 audio
+- Multi-language UI (10 languages)
+- Dark/Light theme
+- Responsive design (RTL/Arabic supported)
+- Edge-optimized (< 50ms cold start)
+- Redis caching (24h TTL)
+- Smart rate limiting per IP/API key/Video
+- Advanced spoofing (IP rotation, User-Agent rotation)
+
+---
+
+## License
+
+Educational and personal use only. Respect TikTok's Terms of Service and content creators' copyrights. Not affiliated with TikTok or ByteDance.
