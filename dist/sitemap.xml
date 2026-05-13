@@ -1,45 +1,32 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" xmlns:xhtml="http://www.w3.org/1999/xhtml">
   <url>
     <loc>https://savepro.site/</loc>
-    <lastmod>2026-05-11</lastmod>
-    <changefreq>always</changefreq>
+    <lastmod>2026-05-13</lastmod>
+    <changefreq>daily</changefreq>
     <priority>1.0</priority>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://savepro.site/"/>
+    <xhtml:link rel="alternate" hreflang="ar" href="https://savepro.site/"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://savepro.site/"/>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://savepro.site/"/>
+    <xhtml:link rel="alternate" hreflang="es" href="https://savepro.site/"/>
+    <xhtml:link rel="alternate" hreflang="de" href="https://savepro.site/"/>
+    <xhtml:link rel="alternate" hreflang="pt" href="https://savepro.site/"/>
+    <xhtml:link rel="alternate" hreflang="ru" href="https://savepro.site/"/>
+    <xhtml:link rel="alternate" hreflang="it" href="https://savepro.site/"/>
+    <xhtml:link rel="alternate" hreflang="tr" href="https://savepro.site/"/>
+    <xhtml:link rel="alternate" hreflang="id" href="https://savepro.site/"/>
   </url>
   <url>
     <loc>https://savepro.site/privacy-policy</loc>
-    <lastmod>2026-05-11</lastmod>
+    <lastmod>2026-05-13</lastmod>
     <changefreq>monthly</changefreq>
-    <priority>0.3</priority>
+    <priority>0.5</priority>
   </url>
   <url>
     <loc>https://savepro.site/terms-of-service</loc>
-    <lastmod>2026-05-11</lastmod>
+    <lastmod>2026-05-13</lastmod>
     <changefreq>monthly</changefreq>
-    <priority>0.3</priority>
-  </url>
-  <url>
-    <loc>https://savepro.site/dmca</loc>
-    <lastmod>2026-05-11</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.3</priority>
-  </url>
-  <url>
-    <loc>https://savepro.site/disclaimer</loc>
-    <lastmod>2026-05-11</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.3</priority>
-  </url>
-  <url>
-    <loc>https://savepro.site/about-us</loc>
-    <lastmod>2026-05-11</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.3</priority>
-  </url>
-  <url>
-    <loc>https://savepro.site/contact</loc>
-    <lastmod>2026-05-11</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.3</priority>
+    <priority>0.5</priority>
   </url>
 </urlset>
